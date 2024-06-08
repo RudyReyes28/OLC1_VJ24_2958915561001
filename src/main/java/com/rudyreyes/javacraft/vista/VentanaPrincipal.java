@@ -4,6 +4,11 @@
  */
 package com.rudyreyes.javacraft.vista;
 
+import com.rudyreyes.javacraft.controlador.analisis.parser;
+import com.rudyreyes.javacraft.controlador.analisis.scanner;
+import com.rudyreyes.javacraft.modelo.abstracto.Instruccion;
+import com.rudyreyes.javacraft.modelo.simbolo.Arbol;
+import com.rudyreyes.javacraft.modelo.simbolo.TablaSimbolos;
 import com.rudyreyes.javacraft.vista.util.NumeroDeLinea;
 import java.awt.Component;
 import java.awt.Font;
@@ -15,6 +20,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringReader;
+import java.util.LinkedList;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -228,19 +235,37 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
     private void btnEjecutarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEjecutarActionPerformed
         // TODO add your handling code here:
-        
+        String contenido="";
         int selectedIndex = areaCodigo.getSelectedIndex();
         if (selectedIndex != -1) {
             JScrollPane scrollPane = (JScrollPane) areaCodigo.getComponentAt(selectedIndex);
             JViewport viewport = scrollPane.getViewport();
             JTextArea textArea = (JTextArea) viewport.getView();
-            String contenido = textArea.getText();
+            contenido = textArea.getText();
 
-            areaConsola.setText(contenido);
+            //areaConsola.setText(contenido);
             //TENGO QUE MODIFICARLO PARA QUE HAGA LA COMPILACION
+            try {
+                scanner s = new scanner(new BufferedReader(new StringReader(contenido)));
+                parser p = new parser(s);
+                var resultado = p.parse();
+                var ast = new Arbol((LinkedList<Instruccion>) resultado.value);
+                var tabla = new TablaSimbolos();
+                tabla.setNombre("GLOBAL");
+                ast.setConsola("");
+                for (var a : ast.getInstrucciones()) {
+                    var res = a.interpretar(ast, tabla);
+                }
+                areaConsola.setText(ast.getConsola());
+            } catch (Exception ex) {
+                System.out.println("Algo salio mal");
+                System.out.println(ex);
+            }
         } else {
             areaConsola.setText("No hay pestañas abiertas");
         }
+        
+         
     }//GEN-LAST:event_btnEjecutarActionPerformed
 
     private void btnPestaniaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPestaniaActionPerformed

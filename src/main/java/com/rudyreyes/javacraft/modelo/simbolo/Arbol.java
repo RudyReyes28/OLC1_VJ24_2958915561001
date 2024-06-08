@@ -60,11 +60,51 @@ public class Arbol {
     
     
     public void Println(String valor){
-        this.consola += valor +"\n";
+        
+        this.consola += secuenciasEscape(valor) +"\n";
     }
     
-    
-    
-    
+        private String secuenciasEscape(String valor) {
+        StringBuilder resultado = new StringBuilder();
+        for (int i = 0; i < valor.length(); i++) {
+            char c = valor.charAt(i);
+            if (c == '\\' && i + 1 < valor.length()) {
+                char siguienteC = valor.charAt(i + 1);
+                switch (siguienteC) {
+                    case 'n':
+                        resultado.append('\n');
+                        i++;
+                        break;
+                    case 't':
+                        resultado.append('\t');
+                        i++; 
+                        break;
+                    case 'r':
+                        resultado.append('\r');
+                        i++; 
+                        break;
+                    case '\\':
+                        resultado.append('\\');
+                        i++;
+                        break;
+                    case '\"':
+                        resultado.append('\"');
+                        i++; 
+                        break;
+                    case '\'':
+                        resultado.append('\'');
+                        i++; 
+                        break;
+                    default:
+                        resultado.append(c); 
+                        break;
+                }
+            } else {
+                resultado.append(c);
+            }
+        }
+        return resultado.toString();
+    }
+
     
 }

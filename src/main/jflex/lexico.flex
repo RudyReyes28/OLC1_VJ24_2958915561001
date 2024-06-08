@@ -34,8 +34,9 @@ FINCADENA=";"
 BLANCOS=[\ \r\t\f\n]+
 ENTERO=[0-9]+
 DECIMAL=[0-9]+"."[0-9]+
-CADENA = [\"]([^\"])*[\"]
-
+CADENA = [\"](\\\"|[^\"])*[\"]
+COMENTARIO = ([/]{2}(.*))
+COMENTARIOMULTI = [/][*]([^/*]*)[*][/]
 //palabras reservadas
 IMPRIMIR="println"
 
@@ -58,3 +59,5 @@ IMPRIMIR="println"
 <YYINITIAL> {MAS} {return new Symbol(sym.MAS, yyline, yycolumn,yytext());}
 <YYINITIAL> {MENOS} {return new Symbol(sym.MENOS, yyline, yycolumn,yytext());}
 <YYINITIAL> {BLANCOS} {}
+<YYINITIAL> {COMENTARIO} {}
+<YYINITIAL> {COMENTARIOMULTI} {}
