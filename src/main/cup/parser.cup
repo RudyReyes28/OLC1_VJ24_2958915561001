@@ -1,0 +1,68 @@
+package com.rudyreyes.javacraft.controlador.analisis;
+
+//importaciones
+import java_cup.runtime.Symbol;
+import java.util.LinkedList;
+import com.rudyreyes.javacraft.modelo.abstracto.Instruccion;
+import com.rudyreyes.javacraft.modelo.simbolo.Tipo;
+import com.rudyreyes.javacraft.modelo.simbolo.TipoDato;
+
+//instrucciones
+import com.rudyreyes.javacraft.modelo.instrucciones.Println;
+
+//expresiones
+import com.rudyreyes.javacraft.modelo.expresiones.Nativo;
+
+// parser
+parser code
+{:
+    scanner s;
+    parser(scanner s){this.s = s;}
+    
+    public void syntax_error(Symbol s){
+        System.out.println("Error Sintactico en la linea " +
+        (s.left) + " y columna " + (s.right) +
+        ". No se esperaba el componente: " + (s.value) + ".");
+    }
+
+    public void unrecovered_syntax_error (Symbol s){
+        System.out.println("Error Sintactico no recuperable en la linea" +
+        (s.left) + " y columna " + (s.right) +
+        ". No se esperaba el componente: " + (s.value) + ".");
+    }
+
+:}
+
+action code
+{:
+:}
+
+//terminales
+terminal String CADENA, ENTERO, DECIMAL;
+terminal FINCADENA, IMPRIMIR;
+terminal PAR1, PAR2, MAS, MENOS, UMENOS;
+
+//no terminales
+nonterminal LinkedList<Instruccion> INICIO, INSTRUCCIONES;
+nonterminal Instruccion INSTRUCCION;
+nonterminal Instruccion EXPRESION;
+
+precedence left MAS;
+precedence left UMENOS;
+
+start with INICIO;
+
+INICIO ::= INSTRUCCIONES:a      {:   RESULT = a;   :}
+;
+
+INSTRUCCIONES ::= INSTRUCCIONES:a INSTRUCCION:b     {: RESULT = a; RESULT.add(b); :}
+                | INSTRUCCION:a                   {: RESULT = new LinkedList<>(); RESULT.add(a); :}
+;
+
+INSTRUCCION ::= IMPRIMIR PAR1 EXPRESION:a PAR2 FINCADENA      {:   RESULT = new Println(a, aleft, aright);   :}
+;
+
+EXPRESION ::= ENTERO:a      {:   RESULT = new Nativo(Integer.parseInt(a), new Tipo(TipoDato.ENTERO), aleft, aright );   :}
+            | DECIMAL:a     {:   RESULT = new Nativo(new Double(a), new Tipo(TipoDato.DECIMAL), aleft, aright );   :}
+            | CADENA:a      {:   RESULT = new Nativo(a, new Tipo(TipoDato.CADENA), aleft, aright );   :}
+;
