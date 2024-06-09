@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import com.rudyreyes.javacraft.modelo.abstracto.Instruccion;
 import com.rudyreyes.javacraft.modelo.simbolo.Tipo;
 import com.rudyreyes.javacraft.modelo.simbolo.TipoDato;
-
+import com.rudyreyes.javacraft.modelo.expresiones.aritmeticas.*;
 //instrucciones
 import com.rudyreyes.javacraft.modelo.instrucciones.Println;
 
@@ -40,29 +40,39 @@ action code
 //terminales
 terminal String CADENA, ENTERO, DECIMAL;
 terminal FINCADENA, IMPRIMIR;
-terminal PAR1, PAR2, MAS, MENOS, UMENOS;
+terminal PAR1, PAR2, MAS, MENOS, UMENOS, MULT, DIV;
+terminal String BOOLEAN, CARACTER;
 
 //no terminales
-nonterminal LinkedList<Instruccion> INICIO, INSTRUCCIONES;
-nonterminal Instruccion INSTRUCCION;
-nonterminal Instruccion EXPRESION;
+nonterminal LinkedList<Instruccion> inicio, instrucciones;
+nonterminal Instruccion instruccion;
+nonterminal Instruccion expresion;
 
-precedence left MAS;
-precedence left UMENOS;
+precedence left MAS, MENOS;
+precedence left MULT, DIV;
+precedence right UMENOS;
 
-start with INICIO;
+start with inicio;
 
-INICIO ::= INSTRUCCIONES:a      {:   RESULT = a;   :}
+inicio ::= instrucciones:a      {:   RESULT = a;   :}
 ;
 
-INSTRUCCIONES ::= INSTRUCCIONES:a INSTRUCCION:b     {: RESULT = a; RESULT.add(b); :}
-                | INSTRUCCION:a                   {: RESULT = new LinkedList<>(); RESULT.add(a); :}
+instrucciones ::= instrucciones:a instruccion:b     {: RESULT = a; RESULT.add(b); :}
+                | instruccion:a                   {: RESULT = new LinkedList<>(); RESULT.add(a); :}
 ;
 
-INSTRUCCION ::= IMPRIMIR PAR1 EXPRESION:a PAR2 FINCADENA      {:   RESULT = new Println(a, aleft, aright);   :}
+instruccion ::= IMPRIMIR PAR1 expresion:a PAR2 FINCADENA      {:   RESULT = new Println(a, aleft, aright);   :}
 ;
 
-EXPRESION ::= ENTERO:a      {:   RESULT = new Nativo(Integer.parseInt(a), new Tipo(TipoDato.ENTERO), aleft, aright );   :}
+expresion ::=  MENOS expresion:a             {:   RESULT = new OperacionNegacionU(a, aleft, aright);   :} %prec UMENOS
+            | expresion:a MAS expresion:b   {:   RESULT = new OperacionSuma(a, b, aleft, aright);   :}
+            | expresion:a MENOS expresion:b   {:  RESULT = new OperacionResta(a, b, aleft, aright);  :}
+            | expresion:a MULT expresion:b    {:   RESULT = new OperacionMultiplicacion(a, b, aleft, aright);   :}
+            | expresion:a DIV expresion:b     {:  RESULT = new OperacionDivision (a, b, aleft, aright);   :}
+            | ENTERO:a      {:   RESULT = new Nativo(Integer.parseInt(a), new Tipo(TipoDato.ENTERO), aleft, aright );   :}
             | DECIMAL:a     {:   RESULT = new Nativo(new Double(a), new Tipo(TipoDato.DECIMAL), aleft, aright );   :}
             | CADENA:a      {:   RESULT = new Nativo(a, new Tipo(TipoDato.CADENA), aleft, aright );   :}
+            | CARACTER:a    {:   RESULT = new Nativo(a, new Tipo(TipoDato.CARACTER), aleft, aright );   :}
+            | BOOLEAN:a     {:   RESULT = new Nativo(a, new Tipo(TipoDato.BOOLEANO), aleft, aright );   :}
+            | PAR1 expresion:a PAR2           {:   RESULT = a;   :}
 ;

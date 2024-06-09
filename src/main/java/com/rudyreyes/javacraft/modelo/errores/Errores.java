@@ -8,14 +8,14 @@ package com.rudyreyes.javacraft.modelo.errores;
  *
  * @author rudyo
  */
-public class Error {
+public class Errores {
     
     private String tipo;
     private String descripcion;
-    private String linea;
-    private String columna;
+    private int linea;
+    private int columna;
 
-    public Error(String tipo, String descripcion, String linea, String columna) {
+    public Errores(String tipo, String descripcion, int linea, int columna) {
         this.tipo = tipo;
         this.descripcion = descripcion;
         this.linea = linea;
@@ -38,19 +38,19 @@ public class Error {
         this.descripcion = descripcion;
     }
 
-    public String getLinea() {
+    public int getLinea() {
         return linea;
     }
 
-    public void setLinea(String linea) {
+    public void setLinea(int linea) {
         this.linea = linea;
     }
 
-    public String getColumna() {
+    public int getColumna() {
         return columna;
     }
 
-    public void setColumna(String columna) {
+    public void setColumna(int columna) {
         this.columna = columna;
     }
 

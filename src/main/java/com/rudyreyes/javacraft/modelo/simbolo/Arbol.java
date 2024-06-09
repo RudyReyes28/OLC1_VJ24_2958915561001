@@ -5,6 +5,7 @@
 package com.rudyreyes.javacraft.modelo.simbolo;
 
 import com.rudyreyes.javacraft.modelo.abstracto.Instruccion;
+import com.rudyreyes.javacraft.modelo.errores.Errores;
 import java.util.LinkedList;
 
 /**
@@ -16,7 +17,7 @@ public class Arbol {
     private LinkedList<Instruccion> instrucciones;
     private String consola;
     private TablaSimbolos tablaGlobal;
-    private LinkedList<Error> errores;
+    private LinkedList<Errores> errores;
 
     public Arbol(LinkedList<Instruccion> instrucciones) {
         this.instrucciones = instrucciones;
@@ -50,11 +51,11 @@ public class Arbol {
         this.tablaGlobal = tablaGlobal;
     }
 
-    public LinkedList<Error> getErrores() {
+    public LinkedList<Errores> getErrores() {
         return errores;
     }
 
-    public void setErrores(LinkedList<Error> errores) {
+    public void setErrores(LinkedList<Errores> errores) {
         this.errores = errores;
     }
     
