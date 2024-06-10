@@ -35,6 +35,13 @@ DIV = "/"
 MOD = "%"
 POTENCIA = [*]{2}
 FINCADENA=";"
+DOBLEIGUAL = "=="
+DIFERENTE = "!="
+MENOR = "<"
+MENORIGUAL = "<="
+MAYOR = ">"
+MAYORIGUAL = ">="
+
 BLANCOS=[\ \r\t\f\n]+
 
 //tipo de datos
@@ -72,16 +79,25 @@ IMPRIMIR="println"
 
 
 
-<YYINITIAL> {FINCADENA} {return new Symbol(sym.FINCADENA, yyline, yycolumn,yytext());}
-<YYINITIAL> {PAR1} {return new Symbol(sym.PAR1, yyline, yycolumn,yytext());}
-<YYINITIAL> {PAR2} {return new Symbol(sym.PAR2, yyline, yycolumn,yytext());}
+<YYINITIAL> {FINCADENA}     {return new Symbol(sym.FINCADENA, yyline, yycolumn,yytext());}
+<YYINITIAL> {PAR1}          {return new Symbol(sym.PAR1, yyline, yycolumn,yytext());}
+<YYINITIAL> {PAR2}          {return new Symbol(sym.PAR2, yyline, yycolumn,yytext());}
 
-<YYINITIAL> {MAS} {return new Symbol(sym.MAS, yyline, yycolumn,yytext());}
-<YYINITIAL> {MENOS} {return new Symbol(sym.MENOS, yyline, yycolumn,yytext());}
-<YYINITIAL> {POTENCIA} {return new Symbol(sym.POTENCIA, yyline, yycolumn,yytext());}
-<YYINITIAL> {MULT} {return new Symbol(sym.MULT, yyline, yycolumn,yytext());}
-<YYINITIAL> {DIV} {return new Symbol(sym.DIV, yyline, yycolumn,yytext());}
-<YYINITIAL> {MOD} {return new Symbol(sym.MOD, yyline, yycolumn,yytext());}
+<YYINITIAL> {MAS}           {return new Symbol(sym.MAS, yyline, yycolumn,yytext());}
+<YYINITIAL> {MENOS}         {return new Symbol(sym.MENOS, yyline, yycolumn,yytext());}
+<YYINITIAL> {POTENCIA}      {return new Symbol(sym.POTENCIA, yyline, yycolumn,yytext());}
+<YYINITIAL> {MULT}          {return new Symbol(sym.MULT, yyline, yycolumn,yytext());}
+<YYINITIAL> {DIV}           {return new Symbol(sym.DIV, yyline, yycolumn,yytext());}
+<YYINITIAL> {MOD}           {return new Symbol(sym.MOD, yyline, yycolumn,yytext());}
+
+<YYINITIAL> {DOBLEIGUAL}    {return new Symbol(sym.DOBLEIGUAL, yyline, yycolumn,yytext());}
+<YYINITIAL> {DIFERENTE}     {return new Symbol(sym.DIFERENTE, yyline, yycolumn,yytext());}
+<YYINITIAL> {MENOR}         {return new Symbol(sym.MENOR, yyline, yycolumn,yytext());}
+<YYINITIAL> {MENORIGUAL}    {return new Symbol(sym.MENORIGUAL, yyline, yycolumn,yytext());}
+<YYINITIAL> {MAYOR}         {return new Symbol(sym.MAYOR, yyline, yycolumn,yytext());}
+<YYINITIAL> {MAYORIGUAL}    {return new Symbol(sym.MAYORIGUAL, yyline, yycolumn,yytext());}
+
+
 <YYINITIAL> {BLANCOS} {}
 <YYINITIAL> {COMENTARIO} {}
 <YYINITIAL> {COMENTARIOMULTI} {}

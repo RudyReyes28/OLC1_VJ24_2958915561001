@@ -249,14 +249,19 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 scanner s = new scanner(new BufferedReader(new StringReader(contenido)));
                 parser p = new parser(s);
                 var resultado = p.parse();
-                var ast = new Arbol((LinkedList<Instruccion>) resultado.value);
-                var tabla = new TablaSimbolos();
-                tabla.setNombre("GLOBAL");
-                ast.setConsola("");
-                for (var a : ast.getInstrucciones()) {
-                    var res = a.interpretar(ast, tabla);
+                
+                if (resultado != null) {
+                    var ast = new Arbol((LinkedList<Instruccion>) resultado.value);
+                    var tabla = new TablaSimbolos();
+                    tabla.setNombre("GLOBAL");
+                    ast.setConsola("");
+                    for (var a : ast.getInstrucciones()) {
+                        var res = a.interpretar(ast, tabla);
+                    }
+                    areaConsola.setText(ast.getConsola());
                 }
-                areaConsola.setText(ast.getConsola());
+                
+                
             } catch (Exception ex) {
                 System.out.println("Algo salio mal");
                 System.out.println(ex);

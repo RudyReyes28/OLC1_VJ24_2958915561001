@@ -7,6 +7,7 @@ import com.rudyreyes.javacraft.modelo.abstracto.Instruccion;
 import com.rudyreyes.javacraft.modelo.simbolo.Tipo;
 import com.rudyreyes.javacraft.modelo.simbolo.TipoDato;
 import com.rudyreyes.javacraft.modelo.expresiones.aritmeticas.*;
+import com.rudyreyes.javacraft.modelo.expresiones.relacionales.*;
 //instrucciones
 import com.rudyreyes.javacraft.modelo.instrucciones.Println;
 
@@ -41,15 +42,17 @@ action code
 terminal String CADENA, ENTERO, DECIMAL;
 terminal FINCADENA, IMPRIMIR;
 terminal PAR1, PAR2, MAS, MENOS, UMENOS, MULT, DIV, MOD, POTENCIA;
+terminal DOBLEIGUAL, DIFERENTE, MENOR, MENORIGUAL, MAYOR, MAYORIGUAL;
 terminal String BOOLEAN, CARACTER;
 
 //no terminales
 nonterminal LinkedList<Instruccion> inicio, instrucciones;
 nonterminal Instruccion instruccion;
-nonterminal Instruccion expresion, expresionAritmetica;
+nonterminal Instruccion expresion, expresionAritmetica, expresionRelacional;
 
 precedence left MAS, MENOS;
 precedence left MULT, DIV, MOD, POTENCIA;
+precedence right DOBLEIGUAL, DIFERENTE, MENOR, MENORIGUAL,MAYOR,  MAYORIGUAL;
 precedence right UMENOS;
 
 start with inicio;
@@ -65,6 +68,7 @@ instruccion ::= IMPRIMIR PAR1 expresion:a PAR2 FINCADENA      {:   RESULT = new 
 ;
 
 expresion ::=  expresionAritmetica:a {: RESULT = a; :}
+            | expresionRelacional: a {: RESULT = a; :}
             | ENTERO:a      {:   RESULT = new Nativo(Integer.parseInt(a), new Tipo(TipoDato.ENTERO), aleft, aright );   :}
             | DECIMAL:a     {:   RESULT = new Nativo(new Double(a), new Tipo(TipoDato.DECIMAL), aleft, aright );   :}
             | CADENA:a      {:   RESULT = new Nativo(a, new Tipo(TipoDato.CADENA), aleft, aright );   :}
@@ -82,4 +86,13 @@ expresionAritmetica ::= MENOS expresion:a             {:   RESULT = new Operacio
             | expresion:a MOD expresion:b     {:  RESULT = new OperacionModulo (a, b, aleft, aright);   :}
             | expresion:a POTENCIA expresion:b     {:  RESULT = new OperacionPotencia (a, b, aleft, aright);   :}
             | PAR1 expresion:a PAR2           {:   RESULT = a;   :}
+;
+
+expresionRelacional ::= expresion:a DOBLEIGUAL expresion:b   {:   RESULT = new Igualacion(a, b, aleft, aright);   :} %prec DOBLEIGUAL
+                    | expresion:a DIFERENTE expresion:b   {:   RESULT = new Diferenciacion(a, b, aleft, aright);   :} %prec DIFERENTE
+                    | expresion:a MENOR expresion:b   {:   RESULT = new MenorQue(a, b, aleft, aright);   :} %prec MENOR
+                    | expresion:a MENORIGUAL expresion:b   {:   RESULT = new MenorIgualQue(a, b, aleft, aright);   :} %prec MENORIGUAL
+                    | expresion:a MAYOR expresion:b   {:   RESULT = new MayorQue(a, b, aleft, aright);   :} %prec MAYOR
+                    | expresion:a MAYORIGUAL expresion:b   {:   RESULT = new MayorIgualQue(a, b, aleft, aright);   :} %prec MAYORIGUAL
+
 ;
