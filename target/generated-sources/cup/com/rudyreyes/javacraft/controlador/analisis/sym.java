@@ -8,22 +8,24 @@ package com.rudyreyes.javacraft.controlador.analisis;
 /** CUP generated interface containing symbol constants. */
 public interface sym {
   /* terminals */
-  public static final int CADENA = 2;
-  public static final int DECIMAL = 4;
+  public static final int MOD = 14;
   public static final int MENOS = 10;
-  public static final int MULT = 12;
+  public static final int CADENA = 2;
+  public static final int FINCADENA = 5;
+  public static final int DECIMAL = 4;
+  public static final int POTENCIA = 15;
+  public static final int IMPRIMIR = 6;
   public static final int UMENOS = 11;
-  public static final int BOOLEAN = 14;
-  public static final int ENTERO = 3;
+  public static final int CARACTER = 17;
+  public static final int BOOLEAN = 16;
   public static final int EOF = 0;
-  public static final int MAS = 9;
+  public static final int MULT = 12;
+  public static final int DIV = 13;
+  public static final int error = 1;
   public static final int PAR2 = 8;
   public static final int PAR1 = 7;
-  public static final int DIV = 13;
-  public static final int FINCADENA = 5;
-  public static final int error = 1;
-  public static final int IMPRIMIR = 6;
-  public static final int CARACTER = 15;
+  public static final int ENTERO = 3;
+  public static final int MAS = 9;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -39,6 +41,8 @@ public interface sym {
   "UMENOS",
   "MULT",
   "DIV",
+  "MOD",
+  "POTENCIA",
   "BOOLEAN",
   "CARACTER"
   };

@@ -40,16 +40,16 @@ action code
 //terminales
 terminal String CADENA, ENTERO, DECIMAL;
 terminal FINCADENA, IMPRIMIR;
-terminal PAR1, PAR2, MAS, MENOS, UMENOS, MULT, DIV;
+terminal PAR1, PAR2, MAS, MENOS, UMENOS, MULT, DIV, MOD, POTENCIA;
 terminal String BOOLEAN, CARACTER;
 
 //no terminales
 nonterminal LinkedList<Instruccion> inicio, instrucciones;
 nonterminal Instruccion instruccion;
-nonterminal Instruccion expresion;
+nonterminal Instruccion expresion, expresionAritmetica;
 
 precedence left MAS, MENOS;
-precedence left MULT, DIV;
+precedence left MULT, DIV, MOD, POTENCIA;
 precedence right UMENOS;
 
 start with inicio;
@@ -64,15 +64,22 @@ instrucciones ::= instrucciones:a instruccion:b     {: RESULT = a; RESULT.add(b)
 instruccion ::= IMPRIMIR PAR1 expresion:a PAR2 FINCADENA      {:   RESULT = new Println(a, aleft, aright);   :}
 ;
 
-expresion ::=  MENOS expresion:a             {:   RESULT = new OperacionNegacionU(a, aleft, aright);   :} %prec UMENOS
-            | expresion:a MAS expresion:b   {:   RESULT = new OperacionSuma(a, b, aleft, aright);   :}
-            | expresion:a MENOS expresion:b   {:  RESULT = new OperacionResta(a, b, aleft, aright);  :}
-            | expresion:a MULT expresion:b    {:   RESULT = new OperacionMultiplicacion(a, b, aleft, aright);   :}
-            | expresion:a DIV expresion:b     {:  RESULT = new OperacionDivision (a, b, aleft, aright);   :}
+expresion ::=  expresionAritmetica:a {: RESULT = a; :}
             | ENTERO:a      {:   RESULT = new Nativo(Integer.parseInt(a), new Tipo(TipoDato.ENTERO), aleft, aright );   :}
             | DECIMAL:a     {:   RESULT = new Nativo(new Double(a), new Tipo(TipoDato.DECIMAL), aleft, aright );   :}
             | CADENA:a      {:   RESULT = new Nativo(a, new Tipo(TipoDato.CADENA), aleft, aright );   :}
             | CARACTER:a    {:   RESULT = new Nativo(a, new Tipo(TipoDato.CARACTER), aleft, aright );   :}
             | BOOLEAN:a     {:   RESULT = new Nativo(a, new Tipo(TipoDato.BOOLEANO), aleft, aright );   :}
+            
+;
+
+
+expresionAritmetica ::= MENOS expresion:a             {:   RESULT = new OperacionNegacionU(a, aleft, aright);   :} %prec UMENOS
+            | expresion:a MAS expresion:b   {:   RESULT = new OperacionSuma(a, b, aleft, aright);   :}
+            | expresion:a MENOS expresion:b   {:  RESULT = new OperacionResta(a, b, aleft, aright);  :}
+            | expresion:a MULT expresion:b    {:   RESULT = new OperacionMultiplicacion(a, b, aleft, aright);   :}
+            | expresion:a DIV expresion:b     {:  RESULT = new OperacionDivision (a, b, aleft, aright);   :}
+            | expresion:a MOD expresion:b     {:  RESULT = new OperacionModulo (a, b, aleft, aright);   :}
+            | expresion:a POTENCIA expresion:b     {:  RESULT = new OperacionPotencia (a, b, aleft, aright);   :}
             | PAR1 expresion:a PAR2           {:   RESULT = a;   :}
 ;

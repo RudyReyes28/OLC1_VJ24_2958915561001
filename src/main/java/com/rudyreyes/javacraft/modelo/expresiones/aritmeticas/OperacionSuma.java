@@ -78,7 +78,7 @@ public class OperacionSuma extends Instruccion{
                 switch (tipo2) {
                     case ENTERO -> {
                         this.tipo.setTipo(TipoDato.DECIMAL);
-                        return (double) op1 + (int) op1;
+                        return (double) op1 + (int) op2;
                     }
                     case DECIMAL -> {
                         this.tipo.setTipo(TipoDato.DECIMAL);

@@ -85,9 +85,6 @@ public class OperacionPotencia extends Instruccion{
                 }
             }
             
-            
-            
-            
             default -> {
                 return new Errores("SEMANTICO", "Potencia erronea", this.linea, this.columna);
 
