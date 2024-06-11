@@ -8,6 +8,8 @@ import com.rudyreyes.javacraft.modelo.simbolo.Tipo;
 import com.rudyreyes.javacraft.modelo.simbolo.TipoDato;
 import com.rudyreyes.javacraft.modelo.expresiones.aritmeticas.*;
 import com.rudyreyes.javacraft.modelo.expresiones.relacionales.*;
+import com.rudyreyes.javacraft.modelo.expresiones.logicas.*;
+import com.rudyreyes.javacraft.modelo.expresiones.casteos.*;
 //instrucciones
 import com.rudyreyes.javacraft.modelo.instrucciones.Println;
 
@@ -43,16 +45,24 @@ terminal String CADENA, ENTERO, DECIMAL;
 terminal FINCADENA, IMPRIMIR;
 terminal PAR1, PAR2, MAS, MENOS, UMENOS, MULT, DIV, MOD, POTENCIA;
 terminal DOBLEIGUAL, DIFERENTE, MENOR, MENORIGUAL, MAYOR, MAYORIGUAL;
+terminal NOT, XOR, OR, AND;
+terminal INT, CHAR, DOUBLE;
 terminal String BOOLEAN, CARACTER;
 
 //no terminales
 nonterminal LinkedList<Instruccion> inicio, instrucciones;
 nonterminal Instruccion instruccion;
-nonterminal Instruccion expresion, expresionAritmetica, expresionRelacional;
+nonterminal Instruccion expresion, expresionAritmetica, expresionRelacional, expresionLogica;
+nonterminal Instruccion castearExpresion;
 
+precedence left OR;
+precedence left AND;
+precedence left XOR;
+precedence right NOT;
+precedence left DOBLEIGUAL, DIFERENTE, MENOR, MENORIGUAL,MAYOR,  MAYORIGUAL;
+precedence right INT, CHAR, DOUBLE;
 precedence left MAS, MENOS;
 precedence left MULT, DIV, MOD, POTENCIA;
-precedence right DOBLEIGUAL, DIFERENTE, MENOR, MENORIGUAL,MAYOR,  MAYORIGUAL;
 precedence right UMENOS;
 
 start with inicio;
@@ -69,6 +79,8 @@ instruccion ::= IMPRIMIR PAR1 expresion:a PAR2 FINCADENA      {:   RESULT = new 
 
 expresion ::=  expresionAritmetica:a {: RESULT = a; :}
             | expresionRelacional: a {: RESULT = a; :}
+            | expresionLogica: a {: RESULT = a; :}
+            | castearExpresion: a {: RESULT =a; :}
             | ENTERO:a      {:   RESULT = new Nativo(Integer.parseInt(a), new Tipo(TipoDato.ENTERO), aleft, aright );   :}
             | DECIMAL:a     {:   RESULT = new Nativo(new Double(a), new Tipo(TipoDato.DECIMAL), aleft, aright );   :}
             | CADENA:a      {:   RESULT = new Nativo(a, new Tipo(TipoDato.CADENA), aleft, aright );   :}
@@ -95,4 +107,16 @@ expresionRelacional ::= expresion:a DOBLEIGUAL expresion:b   {:   RESULT = new I
                     | expresion:a MAYOR expresion:b   {:   RESULT = new MayorQue(a, b, aleft, aright);   :} %prec MAYOR
                     | expresion:a MAYORIGUAL expresion:b   {:   RESULT = new MayorIgualQue(a, b, aleft, aright);   :} %prec MAYORIGUAL
 
+;
+
+expresionLogica ::= NOT expresion:a   {:   RESULT = new OperadorNot(a, aleft, aright);   :} %prec NOT
+                | expresion:a XOR expresion:b   {:   RESULT = new OperadorXor(a, b, aleft, aright);   :} %prec XOR
+                | expresion:a AND expresion:b   {:   RESULT = new OperadorAnd(a, b, aleft, aright);   :} %prec AND
+                | expresion:a OR expresion:b   {:   RESULT = new OperadorOr(a, b, aleft, aright);   :} %prec OR
+
+;
+
+castearExpresion ::= PAR1 INT PAR2 expresion:a {:   RESULT = new Casteo(a, TipoCasteo.ENTERO, aleft, aright);   :} %prec INT
+                | PAR1 DOUBLE PAR2 expresion:a {:   RESULT = new Casteo(a, TipoCasteo.DECIMAL, aleft, aright);   :} %prec DOUBLE
+                | PAR1 CHAR PAR2 expresion:a {:   RESULT = new Casteo(a, TipoCasteo.CARACTER, aleft, aright);   :} %prec CHAR
 ;
