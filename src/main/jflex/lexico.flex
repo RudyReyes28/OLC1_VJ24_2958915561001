@@ -1,17 +1,20 @@
 package com.rudyreyes.javacraft.controlador.analisis;
 //importaciones
 import java_cup.runtime.Symbol;
+import java.util.LinkedList;
+import com.rudyreyes.javacraft.modelo.errores.*;
 
 %%
 
 //codigo de usuario
 %{
-
+    public LinkedList<Errores> listaErrores = new LinkedList<>();
 %}
 
 %init{
     yyline = 1;
     yycolumn = 1;
+    listaErrores = new LinkedList<>();
 %init}
 
 //caracteristicas de jflex
@@ -122,3 +125,9 @@ DOUBLE = "double"
 <YYINITIAL> {BLANCOS} {}
 <YYINITIAL> {COMENTARIO} {}
 <YYINITIAL> {COMENTARIOMULTI} {}
+
+
+<YYINITIAL> . {
+                listaErrores.add(new Errores("LEXICO","El caracter \" "+
+                yytext()+" \" NO pertenece al lenguaje", yyline, yycolumn));
+}

@@ -5,6 +5,7 @@
 package com.rudyreyes.javacraft.modelo.instrucciones;
 
 import com.rudyreyes.javacraft.modelo.abstracto.Instruccion;
+import com.rudyreyes.javacraft.modelo.errores.Errores;
 import com.rudyreyes.javacraft.modelo.simbolo.*;
 
 /**
@@ -23,7 +24,7 @@ public class Println extends Instruccion{
     public Object interpretar(Arbol arbol, TablaSimbolos tabla) {
         var resultado = this.expresion.interpretar(arbol, tabla);
         
-        if(resultado instanceof Error){
+        if(resultado instanceof Errores){
             return resultado;
         }
         

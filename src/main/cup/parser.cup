@@ -10,6 +10,7 @@ import com.rudyreyes.javacraft.modelo.expresiones.aritmeticas.*;
 import com.rudyreyes.javacraft.modelo.expresiones.relacionales.*;
 import com.rudyreyes.javacraft.modelo.expresiones.logicas.*;
 import com.rudyreyes.javacraft.modelo.expresiones.casteos.*;
+import com.rudyreyes.javacraft.modelo.errores.*;
 //instrucciones
 import com.rudyreyes.javacraft.modelo.instrucciones.Println;
 
@@ -22,16 +23,20 @@ parser code
     scanner s;
     parser(scanner s){this.s = s;}
     
+    public LinkedList<Errores> listaErrores = new LinkedList<>();
+    
     public void syntax_error(Symbol s){
-        System.out.println("Error Sintactico en la linea " +
-        (s.left) + " y columna " + (s.right) +
-        ". No se esperaba el componente: " + (s.value) + ".");
+        listaErrores.add(new Errores("SINTACTICO RECUPERABLE",
+                        "No se esperaba el componente "+s.value,
+                        s.left,
+                        s.right));
     }
 
     public void unrecovered_syntax_error (Symbol s){
-        System.out.println("Error Sintactico no recuperable en la linea" +
-        (s.left) + " y columna " + (s.right) +
-        ". No se esperaba el componente: " + (s.value) + ".");
+        listaErrores.add(new Errores("SINTACTICO NO RECUPERABLE",
+                        "No se esperaba el componente "+s.value,
+                        s.left,
+                        s.right));
     }
 
 :}
@@ -75,6 +80,8 @@ instrucciones ::= instrucciones:a instruccion:b     {: RESULT = a; RESULT.add(b)
 ;
 
 instruccion ::= IMPRIMIR PAR1 expresion:a PAR2 FINCADENA      {:   RESULT = new Println(a, aleft, aright);   :}
+             | error FINCADENA
+             | error 
 ;
 
 expresion ::=  expresionAritmetica:a {: RESULT = a; :}

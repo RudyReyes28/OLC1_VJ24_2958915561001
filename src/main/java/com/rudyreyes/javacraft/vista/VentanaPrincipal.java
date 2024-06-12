@@ -7,6 +7,7 @@ package com.rudyreyes.javacraft.vista;
 import com.rudyreyes.javacraft.controlador.analisis.parser;
 import com.rudyreyes.javacraft.controlador.analisis.scanner;
 import com.rudyreyes.javacraft.modelo.abstracto.Instruccion;
+import com.rudyreyes.javacraft.modelo.errores.Errores;
 import com.rudyreyes.javacraft.modelo.simbolo.Arbol;
 import com.rudyreyes.javacraft.modelo.simbolo.TablaSimbolos;
 import com.rudyreyes.javacraft.vista.util.NumeroDeLinea;
@@ -34,7 +35,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * @author rudyo
  */
 public class VentanaPrincipal extends javax.swing.JFrame {
-
+        private LinkedList<Errores> lista ;
     /**
      * Creates new form VentanaPrincipal
      */
@@ -43,6 +44,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         
         NumeroDeLinea lineaConsola = new NumeroDeLinea(areaConsola);
         scrollConsola.setRowHeaderView(lineaConsola);
+        
+        this.setLocationRelativeTo(null);
         
         File carpeta = new File("archivosJC");
         if (!carpeta.exists()) {
@@ -109,6 +112,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         btnReportes.setFont(new java.awt.Font("Comic Sans MS", 1, 12)); // NOI18N
         btnReportes.setText("Reportes");
+        btnReportes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReportesActionPerformed(evt);
+            }
+        });
 
         jSeparator1.setForeground(new java.awt.Color(0, 0, 0));
 
@@ -255,10 +263,29 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                     var tabla = new TablaSimbolos();
                     tabla.setNombre("GLOBAL");
                     ast.setConsola("");
+                    
+                    lista = new LinkedList<>();
+                    
+                    lista.addAll(s.listaErrores);
+                    lista.addAll(p.listaErrores);
+            
+            
                     for (var a : ast.getInstrucciones()) {
+                        if (a == null) {
+                            continue;
+                        }
                         var res = a.interpretar(ast, tabla);
+                        
+                        if (res instanceof Errores) {
+                            
+                            lista.add((Errores) res);
+                        }
                     }
-                    areaConsola.setText(ast.getConsola());
+                    areaConsola.setText(ast.getConsola()+"\n");
+                    
+                    for (var i : lista) {
+                        areaConsola.append(i.toString()+"\n");
+                    }
                 }
                 
                 
@@ -292,6 +319,12 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         
         
     }//GEN-LAST:event_btnPestaniaActionPerformed
+
+    private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
+        // TODO add your handling code here:
+        VentanaReportes ventanaR = new VentanaReportes(this, true, lista);
+        ventanaR.setVisible(true);
+    }//GEN-LAST:event_btnReportesActionPerformed
 
     private void cerrarPestanias(){
         areaCodigo.addMouseListener(new MouseAdapter() {
