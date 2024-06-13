@@ -90,18 +90,20 @@ public class MenorIgualQue extends Instruccion {
                 }
             }
             
-            /*case BOOLEANO ->{
+            case BOOLEANO ->{
                 switch (tipo2) {
                     
                     case BOOLEANO -> {
                         this.tipo.setTipo(TipoDato.BOOLEANO);
-                        return Boolean.parseBoolean(op1.toString().toLowerCase())  == Boolean.parseBoolean(op2.toString().toLowerCase());
+                        int primerOp = Boolean.compare(Boolean.parseBoolean(op1.toString().toLowerCase()), false);
+                        int segundop = Boolean.compare(Boolean.parseBoolean(op2.toString().toLowerCase()), false);
+                        return primerOp  <= segundop;
                     }
                     default -> {
-                        return new Errores("SEMANTICO", "Operacion Relacional erronea: la operacion "+op1.toString()+" no se puede comparar(==) con la operacion "+op2.toString(), this.linea, this.columna);
+                        return new Errores("SEMANTICO", "Operacion Relacional erronea: la operacion "+op1.toString()+" no se puede comparar(>=) con la operacion "+op2.toString(), this.linea, this.columna);
                     }
                 }
-            }*/
+            }
             
             case CARACTER ->{
                 switch (tipo2) {

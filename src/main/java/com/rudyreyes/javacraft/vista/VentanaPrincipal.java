@@ -281,7 +281,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                             lista.add((Errores) res);
                         }
                     }
-                    areaConsola.setText(ast.getConsola()+"\n");
+                    areaConsola.setText(ast.getConsola());
                     
                     for (var i : lista) {
                         areaConsola.append(i.toString()+"\n");

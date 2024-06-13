@@ -62,7 +62,7 @@ nonterminal LinkedList<Instruccion> inicio, instrucciones;
 nonterminal Instruccion instruccion;
 nonterminal Instruccion expresion, expresionAritmetica, expresionRelacional, expresionLogica;
 nonterminal Instruccion castearExpresion, println, declaracion_variable, asignacion_variable;
-nonterminal Instruccion inicializar_variable;
+nonterminal Instruccion inicializar_variable, incremento_variable, decremento_variable;
 nonterminal Tipo tipos_variable;
 nonterminal Boolean  mutabilidad;
 
@@ -88,6 +88,8 @@ instrucciones ::= instrucciones:a instruccion:b     {: RESULT = a; RESULT.add(b)
 instruccion ::= println:a {: RESULT= a; :}
              | declaracion_variable:a {: RESULT= a; :}
              | asignacion_variable:a {: RESULT= a; :}
+             | incremento_variable: a {: RESULT= a; :}
+             | decremento_variable: a {: RESULT= a; :}
              | error FINCADENA
              | error 
 ;
@@ -104,6 +106,14 @@ inicializar_variable ::= IGUAL expresion:c FINCADENA {:RESULT = c; :}
 ;
 
 asignacion_variable ::= ID:a IGUAL expresion:b FINCADENA  {:   RESULT=new AsignacionVariable(a, b, aleft, aright);  :}
+;
+
+incremento_variable ::= ID:a MAS MAS FINCADENA 
+{: RESULT=new IncrementoDecreVariable(a, new OperacionSuma(new AccesoVariable(a, aleft, aright), new Nativo(1, new Tipo(TipoDato.ENTERO), aleft, aright ),aleft, aright) , aleft, aright);  :}
+;
+
+decremento_variable ::= ID:a MENOS MENOS FINCADENA 
+{: RESULT=new IncrementoDecreVariable(a, new OperacionResta(new AccesoVariable(a, aleft, aright), new Nativo(1, new Tipo(TipoDato.ENTERO), aleft, aright ),aleft, aright) , aleft, aright);  :}
 ;
 
 tipos_variable ::= INT       {:   RESULT=new Tipo(TipoDato.ENTERO);   :}
