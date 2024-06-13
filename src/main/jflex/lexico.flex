@@ -38,6 +38,8 @@ DIV = "/"
 MOD = "%"
 POTENCIA = [*]{2}
 FINCADENA=";"
+DOSPUNTOS = ":"
+IGUAL = "="
 
 //simbolos de op relacionales
 DOBLEIGUAL = "=="
@@ -64,25 +66,36 @@ DECIMAL=[0-9]+"."[0-9]+
 CADENA = [\"](\\\"|[^\"])*[\"]
 BOOLEANO = true|false
 CARACTER = '([^\\'\\n\\r]|\\.)'
+ID=[a-zA-z][a-zA-Z0-9_]*
 
 //comentarios
 COMENTARIO = ([/]{2}(.*))
-COMENTARIOMULTI = [/][*]([^/*]*)[*][/]
+COMENTARIOMULTI = "/*"([^*]|\*[^/])*"\*/"
 //palabras reservadas
 IMPRIMIR="println"
 INT = "int"
 CHAR = "char"
 DOUBLE = "double"
+STRING = "String"
+BOOL = "bool"
+CONST = "const"
+VAR = "var"
 
 %%
 <YYINITIAL> {IMPRIMIR} {return new Symbol(sym.IMPRIMIR, yyline, yycolumn,yytext());}
+<YYINITIAL> {CONST} {return new Symbol(sym.CONST, yyline, yycolumn,yytext());}
+<YYINITIAL> {VAR} {return new Symbol(sym.VAR, yyline, yycolumn,yytext());}
 <YYINITIAL> {INT} {return new Symbol(sym.INT, yyline, yycolumn,yytext());}
 <YYINITIAL> {CHAR} {return new Symbol(sym.CHAR, yyline, yycolumn,yytext());}
 <YYINITIAL> {DOUBLE} {return new Symbol(sym.DOUBLE, yyline, yycolumn,yytext());}
+<YYINITIAL> {STRING} {return new Symbol(sym.STRING, yyline, yycolumn,yytext());}
+<YYINITIAL> {BOOL} {return new Symbol(sym.BOOL, yyline, yycolumn,yytext());}
 
 <YYINITIAL> {DECIMAL} {return new Symbol(sym.DECIMAL, yyline, yycolumn,yytext());}
 <YYINITIAL> {ENTERO} {return new Symbol(sym.ENTERO, yyline, yycolumn,yytext());}
 <YYINITIAL> {BOOLEANO} {return new Symbol(sym.BOOLEAN, yyline, yycolumn,yytext());}
+
+<YYINITIAL> {ID} {return new Symbol(sym.ID, yyline, yycolumn,yytext());}
 
 <YYINITIAL> {CADENA} {
     String cadena = yytext();
@@ -97,10 +110,10 @@ DOUBLE = "double"
     }
 
 
-
 <YYINITIAL> {FINCADENA}     {return new Symbol(sym.FINCADENA, yyline, yycolumn,yytext());}
 <YYINITIAL> {PAR1}          {return new Symbol(sym.PAR1, yyline, yycolumn,yytext());}
 <YYINITIAL> {PAR2}          {return new Symbol(sym.PAR2, yyline, yycolumn,yytext());}
+<YYINITIAL> {DOSPUNTOS}          {return new Symbol(sym.DOSPUNTOS, yyline, yycolumn,yytext());}
 
 <YYINITIAL> {MAS}           {return new Symbol(sym.MAS, yyline, yycolumn,yytext());}
 <YYINITIAL> {MENOS}         {return new Symbol(sym.MENOS, yyline, yycolumn,yytext());}
@@ -115,6 +128,8 @@ DOUBLE = "double"
 <YYINITIAL> {MENORIGUAL}    {return new Symbol(sym.MENORIGUAL, yyline, yycolumn,yytext());}
 <YYINITIAL> {MAYOR}         {return new Symbol(sym.MAYOR, yyline, yycolumn,yytext());}
 <YYINITIAL> {MAYORIGUAL}    {return new Symbol(sym.MAYORIGUAL, yyline, yycolumn,yytext());}
+
+<YYINITIAL> {IGUAL}    {return new Symbol(sym.IGUAL, yyline, yycolumn,yytext());}
 
 
 <YYINITIAL> {OR}    {return new Symbol(sym.OR, yyline, yycolumn,yytext());}

@@ -53,7 +53,27 @@ public class TablaSimbolos {
     
     
     
-    
+    public boolean setVariable(Simbolo simbolo) {
+        Simbolo busqueda
+                = (Simbolo) this.tablaActual.get(
+                        simbolo.getId().
+                                toLowerCase());
+        if (busqueda == null) {
+            this.tablaActual.put(simbolo.getId().toLowerCase(),
+                    simbolo);
+            return true;
+        }
+        return false;
+    }
+
+    public Simbolo getVariable(String id) {
+        Simbolo busqueda = (Simbolo) this.tablaActual.
+                get(id.toLowerCase());
+        if (busqueda != null) {
+            return busqueda;
+        }
+        return null;
+    }
     
     
     
