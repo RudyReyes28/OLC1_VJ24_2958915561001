@@ -132,6 +132,14 @@ sentencia_if ::= IF PAR1 expresion:a PAR2 LLAVE1 instrucciones:b LLAVE2  {:   RE
 sentencia_match ::= MATCH expresion:a LLAVE1 casos_match:b DEFAULT  FLECHA LLAVE1 instrucciones:c LLAVE2 LLAVE2 {:
     RESULT = new SentenciaMatch(a, b, c, aleft, aright);
  :}
+                | MATCH expresion:a LLAVE1 casos_match:b  LLAVE2 {:
+    RESULT = new SentenciaMatch(a, b, null, aleft, aright);
+ :}
+
+                | MATCH expresion:a LLAVE1 DEFAULT  FLECHA LLAVE1 instrucciones:c LLAVE2  LLAVE2 {:
+    RESULT = new SentenciaMatch(a, null, c, aleft, aright);
+ :}
+
 
 ;
 
