@@ -85,7 +85,9 @@ CONST = "const"
 VAR = "var"
 IF = "if"
 ELSE = "else"
-
+MATCH = "match"
+FLECHA = "=>"
+DEFAULT = "_"
 %%
 <YYINITIAL> {IMPRIMIR}  {return new Symbol(sym.IMPRIMIR, yyline, yycolumn,yytext());}
 <YYINITIAL> {CONST}     {return new Symbol(sym.CONST, yyline, yycolumn,yytext());}
@@ -97,6 +99,9 @@ ELSE = "else"
 <YYINITIAL> {BOOL}      {return new Symbol(sym.BOOL, yyline, yycolumn,yytext());}
 <YYINITIAL> {IF}        {return new Symbol(sym.IF, yyline, yycolumn,yytext());}
 <YYINITIAL> {ELSE}        {return new Symbol(sym.ELSE, yyline, yycolumn,yytext());}
+<YYINITIAL> {MATCH}        {return new Symbol(sym.MATCH, yyline, yycolumn,yytext());}
+<YYINITIAL> {FLECHA}        {return new Symbol(sym.FLECHA, yyline, yycolumn,yytext());}
+<YYINITIAL> {DEFAULT}        {return new Symbol(sym.DEFAULT, yyline, yycolumn,yytext());}
 
 <YYINITIAL> {DECIMAL}   {return new Symbol(sym.DECIMAL, yyline, yycolumn,yytext());}
 <YYINITIAL> {ENTERO}    {return new Symbol(sym.ENTERO, yyline, yycolumn,yytext());}

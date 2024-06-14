@@ -51,7 +51,7 @@ action code
 terminal String CADENA, ENTERO, DECIMAL, ID;
 terminal FINCADENA, IMPRIMIR;
 terminal PAR1, PAR2, MAS, MENOS, UMENOS, MULT, DIV, MOD, POTENCIA;
-terminal LLAVE1, LLAVE2, IF, ELSE;
+terminal LLAVE1, LLAVE2, IF, ELSE, MATCH, FLECHA, DEFAULT;
 terminal DOBLEIGUAL, DIFERENTE, MENOR, MENORIGUAL, MAYOR, MAYORIGUAL;
 terminal NOT, XOR, OR, AND;
 terminal INT, CHAR, DOUBLE, STRING, BOOL;
@@ -65,9 +65,11 @@ nonterminal Instruccion instruccion;
 nonterminal Instruccion expresion, expresionAritmetica, expresionRelacional, expresionLogica;
 nonterminal Instruccion castearExpresion, println, declaracion_variable, asignacion_variable;
 nonterminal Instruccion inicializar_variable, incremento_variable, decremento_variable;
-nonterminal Instruccion sentencia_if;
+nonterminal Instruccion sentencia_if, sentencia_match;
 nonterminal Tipo tipos_variable;
 nonterminal Boolean  mutabilidad;
+nonterminal CasoMatch caso_match;
+nonterminal LinkedList<CasoMatch> casos_match;
 
 precedence left OR;
 precedence left AND;
@@ -94,6 +96,7 @@ instruccion ::= println:a {: RESULT= a; :}
              | incremento_variable: a {: RESULT= a; :}
              | decremento_variable: a {: RESULT= a; :}
              | sentencia_if : a {: RESULT= a; :}
+             | sentencia_match : a {: RESULT= a; :}
              | error FINCADENA
              | error 
 ;
@@ -125,6 +128,19 @@ sentencia_if ::= IF PAR1 expresion:a PAR2 LLAVE1 instrucciones:b LLAVE2  {:   RE
                 | IF PAR1 expresion:a PAR2 LLAVE1 instrucciones:b LLAVE2 ELSE sentencia_if:c {:   RESULT = new SentenciaElseIF(a, b, c, aleft, aright);   :}
 ;
 
+
+sentencia_match ::= MATCH expresion:a LLAVE1 casos_match:b DEFAULT  FLECHA LLAVE1 instrucciones:c LLAVE2 LLAVE2 {:
+    RESULT = new SentenciaMatch(a, b, c, aleft, aright);
+ :}
+
+;
+
+casos_match ::= casos_match:a caso_match:b {:RESULT = a; RESULT.add(b);:}
+            | caso_match:a {:RESULT = new LinkedList<>(); RESULT.add(a);:}
+;
+
+caso_match ::= expresion:a FLECHA LLAVE1 instrucciones:b LLAVE2  {:RESULT = new CasoMatch(a, b);:}
+;
 
 tipos_variable ::= INT       {:   RESULT=new Tipo(TipoDato.ENTERO);   :}
                 | DOUBLE    {:   RESULT=new Tipo(TipoDato.DECIMAL);   :}
