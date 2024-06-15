@@ -47,6 +47,10 @@ public class SentenciaMatch extends Instruccion{
                     if (cond.equals(condCaso)) {
                         for (var i : c.getInstrucciones()) {
                             var resultado = i.interpretar(arbol, newTabla);
+                            
+                            if (resultado instanceof Errores) {
+                                return resultado;
+                            }
                         }
                         this.ejecutarDefault = false;
                         break;
@@ -57,6 +61,9 @@ public class SentenciaMatch extends Instruccion{
             if (casoDefault != null) {
                 for (var i : casoDefault) {
                     var resultado = i.interpretar(arbol, newTabla);
+                    if (resultado instanceof Errores) {
+                            return resultado;
+                    }
                 }
                 this.ejecutarDefault = false;
             }
@@ -66,6 +73,9 @@ public class SentenciaMatch extends Instruccion{
             if (casoDefault != null) {
                 for (var i : casoDefault) {
                     var resultado = i.interpretar(arbol, newTabla);
+                    if (resultado instanceof Errores) {
+                            return resultado;
+                    }
                 }
             }
         }

@@ -42,6 +42,8 @@ DOSPUNTOS = ":"
 IGUAL = "="
 LLAVE1="{"
 LLAVE2="}"
+CORCHETE1 = "["
+CORCHETE2 ="]"
 
 //simbolos de op relacionales
 DOBLEIGUAL = "=="
@@ -68,7 +70,7 @@ DECIMAL=[0-9]+"."[0-9]+
 CADENA = [\"](\\\"|[^\"])*[\"]
 BOOLEANO = true|false
 CARACTER = '([^\\'\\n\\r]|\\.)'
-ID=[a-zA-z][a-zA-Z0-9_]*
+ID = [a-zA-Z][a-zA-Z0-9_]*
 
 //comentarios
 COMENTARIO = ([/]{2}(.*))
@@ -88,6 +90,10 @@ ELSE = "else"
 MATCH = "match"
 FLECHA = "=>"
 DEFAULT = "_"
+FOR = "for"
+WHILE = "while"
+DO = "do"
+BREAK = "break"
 %%
 <YYINITIAL> {IMPRIMIR}  {return new Symbol(sym.IMPRIMIR, yyline, yycolumn,yytext());}
 <YYINITIAL> {CONST}     {return new Symbol(sym.CONST, yyline, yycolumn,yytext());}
@@ -102,12 +108,21 @@ DEFAULT = "_"
 <YYINITIAL> {MATCH}        {return new Symbol(sym.MATCH, yyline, yycolumn,yytext());}
 <YYINITIAL> {FLECHA}        {return new Symbol(sym.FLECHA, yyline, yycolumn,yytext());}
 <YYINITIAL> {DEFAULT}        {return new Symbol(sym.DEFAULT, yyline, yycolumn,yytext());}
+<YYINITIAL> {FOR}        {return new Symbol(sym.FOR, yyline, yycolumn,yytext());}
+<YYINITIAL> {WHILE}        {return new Symbol(sym.WHILE, yyline, yycolumn,yytext());}
+<YYINITIAL> {DO}        {return new Symbol(sym.DO, yyline, yycolumn,yytext());}
+<YYINITIAL> {BREAK}        {return new Symbol(sym.BREAK, yyline, yycolumn,yytext());}
+
+
 
 <YYINITIAL> {DECIMAL}   {return new Symbol(sym.DECIMAL, yyline, yycolumn,yytext());}
 <YYINITIAL> {ENTERO}    {return new Symbol(sym.ENTERO, yyline, yycolumn,yytext());}
 <YYINITIAL> {BOOLEANO}  {return new Symbol(sym.BOOLEAN, yyline, yycolumn,yytext());}
 
+
+
 <YYINITIAL> {ID}        {return new Symbol(sym.ID, yyline, yycolumn,yytext());}
+
 
 <YYINITIAL> {CADENA} {
     String cadena = yytext();
@@ -127,6 +142,8 @@ DEFAULT = "_"
 <YYINITIAL> {PAR2}          {return new Symbol(sym.PAR2, yyline, yycolumn,yytext());}
 <YYINITIAL> {LLAVE1}        {return new Symbol(sym.LLAVE1, yyline, yycolumn,yytext());}
 <YYINITIAL> {LLAVE2}        {return new Symbol(sym.LLAVE2, yyline, yycolumn,yytext());}
+<YYINITIAL> {CORCHETE1}     {return new Symbol(sym.CORCHETE1, yyline, yycolumn,yytext());}
+<YYINITIAL> {CORCHETE2}     {return new Symbol(sym.CORCHETE2, yyline, yycolumn,yytext());}
 <YYINITIAL> {DOSPUNTOS}     {return new Symbol(sym.DOSPUNTOS, yyline, yycolumn,yytext());}
 
 <YYINITIAL> {MAS}           {return new Symbol(sym.MAS, yyline, yycolumn,yytext());}

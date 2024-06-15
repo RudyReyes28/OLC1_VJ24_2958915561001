@@ -48,6 +48,9 @@ public class SentenciaIfElse extends Instruccion{
                 /*
                     Manejo de errores
                 */
+                if (resultado instanceof Errores) {
+                    return resultado;
+                }
             }
         }else{
             for (var i : this.instruccionesElse) {
@@ -55,6 +58,9 @@ public class SentenciaIfElse extends Instruccion{
                 /*
                     Manejo de errores
                 */
+                if (resultado instanceof Errores) {
+                    return resultado;
+                }
             }
         }
         

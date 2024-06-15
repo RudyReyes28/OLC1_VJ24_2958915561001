@@ -6,6 +6,7 @@ package com.rudyreyes.javacraft.modelo.instrucciones.sentenciaControl;
 
 import com.rudyreyes.javacraft.modelo.abstracto.Instruccion;
 import com.rudyreyes.javacraft.modelo.errores.Errores;
+import com.rudyreyes.javacraft.modelo.instrucciones.sentenciasTransferencia.SentenciaBreak;
 import com.rudyreyes.javacraft.modelo.simbolo.Arbol;
 import com.rudyreyes.javacraft.modelo.simbolo.TablaSimbolos;
 import com.rudyreyes.javacraft.modelo.simbolo.Tipo;
@@ -44,7 +45,17 @@ public class SentenciaIf extends Instruccion {
         var newTabla = new TablaSimbolos(tabla);
         if ((boolean) cond) {
             for (var i : this.instrucciones) {
+                if (i instanceof SentenciaBreak) {
+                    return i;
+                }
                 var resultado = i.interpretar(arbol, newTabla);
+                if (resultado instanceof SentenciaBreak) {
+                    return resultado;
+                }
+                
+                if (resultado instanceof Errores) {
+                    return resultado;
+                }
                 /*
                     Manejo de errores
                 */

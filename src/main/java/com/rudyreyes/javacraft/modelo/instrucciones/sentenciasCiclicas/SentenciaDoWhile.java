@@ -2,10 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.rudyreyes.javacraft.modelo.instrucciones.sentenciaControl;
+package com.rudyreyes.javacraft.modelo.instrucciones.sentenciasCiclicas;
 
 import com.rudyreyes.javacraft.modelo.abstracto.Instruccion;
 import com.rudyreyes.javacraft.modelo.errores.Errores;
+import com.rudyreyes.javacraft.modelo.instrucciones.sentenciasTransferencia.SentenciaBreak;
 import com.rudyreyes.javacraft.modelo.simbolo.Arbol;
 import com.rudyreyes.javacraft.modelo.simbolo.TablaSimbolos;
 import com.rudyreyes.javacraft.modelo.simbolo.Tipo;
@@ -16,22 +17,20 @@ import java.util.LinkedList;
  *
  * @author rudyo
  */
-public class SentenciaElseIF extends Instruccion{
+public class SentenciaDoWhile extends Instruccion{
     private Instruccion condicion;
     private LinkedList<Instruccion> instrucciones;
-    private Instruccion instruccionesElseIf;
 
-    public SentenciaElseIF(Instruccion condicion, LinkedList<Instruccion> instrucciones, Instruccion instruccionesElseIf, int linea, int columna) {
+    public SentenciaDoWhile(Instruccion condicion, LinkedList<Instruccion> instrucciones, int linea, int columna) {
         super(new Tipo(TipoDato.VOID), linea, columna);
         this.condicion = condicion;
         this.instrucciones = instrucciones;
-        this.instruccionesElseIf = instruccionesElseIf;
     }
-
-    
 
     @Override
     public Object interpretar(Arbol arbol, TablaSimbolos tabla) {
+        
+        
         var cond = this.condicion.interpretar(arbol, tabla);
         if (cond instanceof Errores) {
             return cond;
@@ -43,35 +42,30 @@ public class SentenciaElseIF extends Instruccion{
                     this.linea, this.columna);
         }
         
-        var newTabla = new TablaSimbolos(tabla);
-        if ((boolean) cond) {
+        
+        do{
+            var newTabla = new TablaSimbolos(tabla);
+
+            //ejecutar instrucciones
             for (var i : this.instrucciones) {
-                var resultado = i.interpretar(arbol, newTabla);
-                /*
-                    Manejo de errores
-                */
-                if (resultado instanceof Errores) {
-                    return resultado;
+                if (i instanceof SentenciaBreak) {
+                    return null;
+                }
+                var resIns = i.interpretar(arbol, newTabla);
+                if (resIns instanceof SentenciaBreak) {
+                    return null;
+                }
+                if (resIns instanceof Errores) {
+                    return resIns;
                 }
             }
-        }else{
             
-                var resultado = instruccionesElseIf.interpretar(arbol, newTabla);
-                /*
-                    Manejo de errores
-                */
-                if (resultado instanceof Errores) {
-                    return resultado;
-                }
             
-        }
+        }while((boolean)this.condicion.interpretar(arbol, tabla));
+        
         
         return null;
     }
-
-    
-
-    
     
     
     
