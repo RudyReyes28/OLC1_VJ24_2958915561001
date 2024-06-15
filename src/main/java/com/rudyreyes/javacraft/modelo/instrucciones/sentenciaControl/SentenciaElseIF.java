@@ -6,6 +6,8 @@ package com.rudyreyes.javacraft.modelo.instrucciones.sentenciaControl;
 
 import com.rudyreyes.javacraft.modelo.abstracto.Instruccion;
 import com.rudyreyes.javacraft.modelo.errores.Errores;
+import com.rudyreyes.javacraft.modelo.instrucciones.sentenciasTransferencia.SentenciaBreak;
+import com.rudyreyes.javacraft.modelo.instrucciones.sentenciasTransferencia.SentenciaContinue;
 import com.rudyreyes.javacraft.modelo.simbolo.Arbol;
 import com.rudyreyes.javacraft.modelo.simbolo.TablaSimbolos;
 import com.rudyreyes.javacraft.modelo.simbolo.Tipo;
@@ -46,10 +48,22 @@ public class SentenciaElseIF extends Instruccion{
         var newTabla = new TablaSimbolos(tabla);
         if ((boolean) cond) {
             for (var i : this.instrucciones) {
+                if (i instanceof SentenciaBreak) {
+                    return i;
+                }
+                
+                if (i instanceof SentenciaContinue) {
+                    return i;
+                }
                 var resultado = i.interpretar(arbol, newTabla);
-                /*
-                    Manejo de errores
-                */
+                if (resultado instanceof SentenciaBreak) {
+                    return resultado;
+                }
+                
+                if (resultado instanceof SentenciaContinue) {
+                    return resultado;
+                }
+                
                 if (resultado instanceof Errores) {
                     return resultado;
                 }
@@ -60,6 +74,16 @@ public class SentenciaElseIF extends Instruccion{
                 /*
                     Manejo de errores
                 */
+                
+                if (resultado instanceof SentenciaBreak) {
+                    return resultado;
+                }
+                
+                if (resultado instanceof SentenciaContinue) {
+                    
+                    return resultado;
+                }
+                
                 if (resultado instanceof Errores) {
                     return resultado;
                 }

@@ -22,6 +22,7 @@ public interface sym {
   public static final int XOR = 34;
   public static final int DIFERENTE = 28;
   public static final int DOUBLE = 39;
+  public static final int CONTINUE = 51;
   public static final int INT = 37;
   public static final int FOR = 24;
   public static final int MATCH = 21;
@@ -110,7 +111,8 @@ public interface sym {
   "VAR",
   "BOOLEAN",
   "CARACTER",
-  "BREAK"
+  "BREAK",
+  "CONTINUE"
   };
 }
 

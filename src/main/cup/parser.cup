@@ -60,7 +60,7 @@ terminal NOT, XOR, OR, AND;
 terminal INT, CHAR, DOUBLE, STRING, BOOL;
 terminal DOSPUNTOS, IGUAL, CORCHETE1, CORCHETE2;
 terminal CONST, VAR;
-terminal String BOOLEAN, CARACTER, BREAK;
+terminal String BOOLEAN, CARACTER, BREAK, CONTINUE;
 
 //no terminales
 nonterminal LinkedList<Instruccion> inicio, instrucciones;
@@ -70,7 +70,7 @@ nonterminal Instruccion castearExpresion, println, declaracion_variable, asignac
 nonterminal Instruccion inicializar_variable, incremento_variable, decremento_variable;
 nonterminal Instruccion sentencia_if, sentencia_match;
 nonterminal Instruccion ciclo_for, ciclo_while, ciclo_dowhile, actualizar_for;
-nonterminal Instruccion transferencia_break;
+nonterminal Instruccion transferencia_break, transferencia_continue;
 nonterminal Tipo tipos_variable;
 nonterminal Boolean  mutabilidad;
 nonterminal CasoMatch caso_match;
@@ -106,6 +106,7 @@ instruccion ::= println:a {: RESULT= a; :}
              | ciclo_while: a {: RESULT= a; :}
              | ciclo_dowhile: a {: RESULT= a; :}
              | transferencia_break: a {: RESULT= a; :}
+             | transferencia_continue: a {: RESULT= a; :}
              | error FINCADENA
              | error 
 ;
@@ -182,6 +183,10 @@ ciclo_dowhile ::= DO LLAVE1 CORCHETE1  instrucciones:b CORCHETE2 LLAVE2 WHILE PA
 
 transferencia_break::=  BREAK:a FINCADENA      {:    RESULT = new SentenciaBreak(aleft, aright);     :}
 ;
+
+transferencia_continue::=  CONTINUE:a FINCADENA      {:    RESULT = new SentenciaContinue(aleft, aright);     :}
+;
+
 
 tipos_variable ::= INT       {:   RESULT=new Tipo(TipoDato.ENTERO);   :}
                 | DOUBLE    {:   RESULT=new Tipo(TipoDato.DECIMAL);   :}

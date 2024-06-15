@@ -94,6 +94,7 @@ FOR = "for"
 WHILE = "while"
 DO = "do"
 BREAK = "break"
+CONTINUE = "continue"
 %%
 <YYINITIAL> {IMPRIMIR}  {return new Symbol(sym.IMPRIMIR, yyline, yycolumn,yytext());}
 <YYINITIAL> {CONST}     {return new Symbol(sym.CONST, yyline, yycolumn,yytext());}
@@ -112,6 +113,7 @@ BREAK = "break"
 <YYINITIAL> {WHILE}        {return new Symbol(sym.WHILE, yyline, yycolumn,yytext());}
 <YYINITIAL> {DO}        {return new Symbol(sym.DO, yyline, yycolumn,yytext());}
 <YYINITIAL> {BREAK}        {return new Symbol(sym.BREAK, yyline, yycolumn,yytext());}
+<YYINITIAL> {CONTINUE}        {return new Symbol(sym.CONTINUE, yyline, yycolumn,yytext());}
 
 
 
