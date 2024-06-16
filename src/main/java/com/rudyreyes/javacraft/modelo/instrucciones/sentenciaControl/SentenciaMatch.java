@@ -31,6 +31,7 @@ public class SentenciaMatch extends Instruccion{
 
     @Override
     public Object interpretar(Arbol arbol, TablaSimbolos tabla) {
+        ejecutarDefault = true;
         var cond = this.condicion.interpretar(arbol, tabla);
         if (cond instanceof Errores) {
             return cond;

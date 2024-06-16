@@ -207,7 +207,7 @@ expresion ::=  expresionAritmetica:a {: RESULT = a; :}
             | DECIMAL:a     {:   RESULT = new Nativo(new Double(a), new Tipo(TipoDato.DECIMAL), aleft, aright );   :}
             | CADENA:a      {:   RESULT = new Nativo(a, new Tipo(TipoDato.CADENA), aleft, aright );   :}
             | CARACTER:a    {:   RESULT = new Nativo(a, new Tipo(TipoDato.CARACTER), aleft, aright );   :}
-            | BOOLEAN:a     {:   RESULT = new Nativo(a, new Tipo(TipoDato.BOOLEANO), aleft, aright );   :}
+            | BOOLEAN:a     {:   RESULT = new Nativo(Boolean.parseBoolean(a), new Tipo(TipoDato.BOOLEANO), aleft, aright );   :}
             | ID:a          {:   RESULT = new AccesoVariable(a, aleft, aright);   :}
             
 ;
