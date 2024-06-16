@@ -5,7 +5,12 @@
 package com.rudyreyes.javacraft.vista;
 
 import com.rudyreyes.javacraft.modelo.errores.Errores;
+import com.rudyreyes.javacraft.modelo.simbolo.EntornoSimbolos;
+import com.rudyreyes.javacraft.modelo.simbolo.Simbolo;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
+import java.util.List;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
@@ -17,12 +22,14 @@ import javax.swing.table.TableColumnModel;
 public class VentanaReportes extends javax.swing.JDialog {
 
     LinkedList<Errores> listaErrores;
+    List<EntornoSimbolos> listaSimbolos;
     /**
      * Creates new form VentanaReportes
      */
-    public VentanaReportes(java.awt.Frame parent, boolean modal, LinkedList<Errores> lista) {
+    public VentanaReportes(java.awt.Frame parent, boolean modal, LinkedList<Errores> lista, List<EntornoSimbolos> listaSimbolos) {
         super(parent, modal);
         this.listaErrores = lista;
+        this.listaSimbolos = listaSimbolos;
         initComponents();
         
         this.setLocationRelativeTo(null);
@@ -168,8 +175,64 @@ public class VentanaReportes extends javax.swing.JDialog {
         DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
         
         tablaReportes.setModel(modelo);
+
+        int contador = 1;
+
+        for (EntornoSimbolos entornoSimbolos : listaSimbolos) {
+            //System.out.println("Entorno: " + entornoSimbolos.getNombreEntorno());
+            if (!entornoSimbolos.getSimbolos().isEmpty()) {
+
+                Collections.sort(entornoSimbolos.getSimbolos(), new Comparator<Simbolo>() {
+                    @Override
+                    public int compare(Simbolo s1, Simbolo s2) {
+                        return Integer.compare(s1.getLinea(), s2.getLinea());
+                    }
+                });
+                for (Simbolo simbolo : entornoSimbolos.getSimbolos()) {
+                    //System.out.println(simbolo.imprimirSimbolo());
+
+                    
+                    modelo.addRow(new Object[]{
+                        contador,
+                        simbolo.getId(),
+                        "Variable",
+                        simbolo.getTipo().getTipo(),
+                        entornoSimbolos.getNombreEntorno(),
+                        simbolo.getValor(),
+                        simbolo.getLinea(),
+                        simbolo.getColumna()
+                    });
+
+                    contador++;
+                }
+
+            }
+        }
     }//GEN-LAST:event_btnTablaSimbolosActionPerformed
 
+    public String convertirValorAString(Object valor) {
+        if (valor == null) {
+            return "null";
+        }
+        if (valor instanceof String) {
+            return (String) valor;
+        }
+        if (valor instanceof Integer) {
+            return Integer.toString((Integer) valor);
+        }
+        if (valor instanceof Boolean) {
+            return Boolean.toString((Boolean) valor);
+        }
+        if (valor instanceof Double) {
+            return Double.toString((Double) valor);
+        }
+        if (valor instanceof Character) {
+            return Character.toString((Character) valor);
+        }
+        // Agrega más condiciones según los tipos de tus objetos...
+        return valor.toString();  // Valor por defecto si no se reconoce el tipo
+    }
+    
     /**
      * @param args the command line arguments
      */

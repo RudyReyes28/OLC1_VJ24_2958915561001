@@ -9,6 +9,7 @@ import com.rudyreyes.javacraft.controlador.analisis.scanner;
 import com.rudyreyes.javacraft.modelo.abstracto.Instruccion;
 import com.rudyreyes.javacraft.modelo.errores.Errores;
 import com.rudyreyes.javacraft.modelo.simbolo.Arbol;
+import com.rudyreyes.javacraft.modelo.simbolo.EntornoSimbolos;
 import com.rudyreyes.javacraft.modelo.simbolo.TablaSimbolos;
 import com.rudyreyes.javacraft.vista.util.NumeroDeLinea;
 import java.awt.Component;
@@ -23,6 +24,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.LinkedList;
+import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -36,6 +38,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class VentanaPrincipal extends javax.swing.JFrame {
         private LinkedList<Errores> lista ;
+        private List<EntornoSimbolos> listaSimbolos;
     /**
      * Creates new form VentanaPrincipal
      */
@@ -288,13 +291,15 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                     }
                     ast.setTablaGlobal(tabla);
                     //tabla.mostrarSimbolosTablaActual();
-                    ast.mostrarTodosLosSimbolos();
+                    //ast.mostrarTodosLosSimbolos();
+                    listaSimbolos =ast.getTodosLosSimbolos();
                 }
                 
                 
             } catch (Exception ex) {
-                System.out.println("Algo salio mal");
-                System.out.println(ex);
+                areaConsola.setText("Algo salio mal: "+ex);
+                //System.out.println("Algo salio mal");
+                //System.out.println(ex);
             }
         } else {
             areaConsola.setText("No hay pestañas abiertas");
@@ -325,7 +330,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
     private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
         // TODO add your handling code here:
-        VentanaReportes ventanaR = new VentanaReportes(this, true, lista);
+        VentanaReportes ventanaR = new VentanaReportes(this, true, lista, listaSimbolos);
         ventanaR.setVisible(true);
     }//GEN-LAST:event_btnReportesActionPerformed
 

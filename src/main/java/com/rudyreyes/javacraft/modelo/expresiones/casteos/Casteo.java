@@ -54,7 +54,10 @@ public class Casteo extends Instruccion{
         var tipo1 = this.operacion.tipo.getTipo();
         
         switch (tipo1) {
-            
+            case ENTERO ->{
+                this.tipo.setTipo(TipoDato.ENTERO);
+                return (int)op;
+            }
             case DECIMAL ->{
                 this.tipo.setTipo(TipoDato.ENTERO);
                 return (int)((double) op);
@@ -81,10 +84,16 @@ public class Casteo extends Instruccion{
                 return Double.valueOf(op.toString());
             }
             
+            case DECIMAL ->{
+                this.tipo.setTipo(TipoDato.DECIMAL);
+                return Double.valueOf(op.toString());
+            }
+            
             case CARACTER ->{
                 this.tipo.setTipo(TipoDato.DECIMAL);
                 return (double) ((int) op.toString().charAt(0));
             }
+            
             default -> {
                 return new Errores("SEMANTICO", "Tipo de dato no soportado para el casteo a DECIMAL: " + tipo1, this.linea, this.columna);
             }
@@ -99,6 +108,11 @@ public class Casteo extends Instruccion{
             case ENTERO ->{
                 this.tipo.setTipo(TipoDato.CARACTER);
                 return (char)((int)op);
+            }
+            
+            case CARACTER ->{
+                this.tipo.setTipo(TipoDato.CARACTER);
+                return op.toString().charAt(0);
             }
             
             default -> {

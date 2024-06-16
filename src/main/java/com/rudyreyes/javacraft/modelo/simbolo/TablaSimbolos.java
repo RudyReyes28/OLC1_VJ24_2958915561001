@@ -108,7 +108,7 @@ public class TablaSimbolos {
                 simbolos.add((Simbolo) obj);
             } else {
                 // Maneja el caso en que obj no es una instancia de Simbolo si es necesario
-                System.err.println("Warning: Encontrado un objeto no Simbolo en la tabla de símbolos.");
+                System.out.println("Warning: Encontrado un objeto no Simbolo en la tabla de símbolos");
             }
         }
         return simbolos;
