@@ -4,7 +4,9 @@
  */
 package com.rudyreyes.javacraft.modelo.simbolo;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  *
@@ -77,6 +79,46 @@ public class TablaSimbolos {
         return null;
     }
     
+    public List<Simbolo> getTodosLosSimbolos() {
+        List<Simbolo> simbolos = new ArrayList<>();
+        for (TablaSimbolos i = this; i != null; i = i.getTablaAnterior()) {
+            for (Object obj : i.tablaActual.values()) {
+                if (obj instanceof Simbolo) {
+                    simbolos.add((Simbolo) obj);
+                } else {
+                    // Maneja el caso en que obj no es una instancia de Simbolo si es necesario
+                    System.err.println("Warning: Encontrado un objeto no Simbolo en la tabla de símbolos.");
+                }
+            }
+        }
+        return simbolos;
+    }
+
+    public void mostrarTodosLosSimbolos() {
+        List<Simbolo> simbolos = getTodosLosSimbolos();
+        for (Simbolo simbolo : simbolos) {
+            System.out.println(simbolo.imprimirSimbolo());
+        }
+    }
     
-    
+    public List<Simbolo> getSimbolosTablaActual() {
+        List<Simbolo> simbolos = new ArrayList<>();
+        for (Object obj : this.tablaActual.values()) {
+            if (obj instanceof Simbolo) {
+                simbolos.add((Simbolo) obj);
+            } else {
+                // Maneja el caso en que obj no es una instancia de Simbolo si es necesario
+                System.err.println("Warning: Encontrado un objeto no Simbolo en la tabla de símbolos.");
+            }
+        }
+        return simbolos;
+    }
+
+    public void mostrarSimbolosTablaActual() {
+        List<Simbolo> simbolos = getSimbolosTablaActual();
+        for (Simbolo simbolo : simbolos) {
+            System.out.println(simbolo.imprimirSimbolo());
+        }
+    }
+
 }

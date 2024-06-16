@@ -42,8 +42,6 @@ DOSPUNTOS = ":"
 IGUAL = "="
 LLAVE1="{"
 LLAVE2="}"
-CORCHETE1 = "["
-CORCHETE2 ="]"
 
 //simbolos de op relacionales
 DOBLEIGUAL = "=="
@@ -144,8 +142,6 @@ CONTINUE = "continue"
 <YYINITIAL> {PAR2}          {return new Symbol(sym.PAR2, yyline, yycolumn,yytext());}
 <YYINITIAL> {LLAVE1}        {return new Symbol(sym.LLAVE1, yyline, yycolumn,yytext());}
 <YYINITIAL> {LLAVE2}        {return new Symbol(sym.LLAVE2, yyline, yycolumn,yytext());}
-<YYINITIAL> {CORCHETE1}     {return new Symbol(sym.CORCHETE1, yyline, yycolumn,yytext());}
-<YYINITIAL> {CORCHETE2}     {return new Symbol(sym.CORCHETE2, yyline, yycolumn,yytext());}
 <YYINITIAL> {DOSPUNTOS}     {return new Symbol(sym.DOSPUNTOS, yyline, yycolumn,yytext());}
 
 <YYINITIAL> {MAS}           {return new Symbol(sym.MAS, yyline, yycolumn,yytext());}

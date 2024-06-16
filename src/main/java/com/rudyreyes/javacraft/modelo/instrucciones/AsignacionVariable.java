@@ -58,6 +58,8 @@ public class AsignacionVariable extends Instruccion{
         }
         
         variable.setValor(nuevoValor);
+        variable.setLinea(this.linea);
+        variable.setColumna(this.columna);
         
         return null;
     }

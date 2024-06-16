@@ -7,6 +7,7 @@ package com.rudyreyes.javacraft.modelo.instrucciones.sentenciasCiclicas;
 import com.rudyreyes.javacraft.modelo.abstracto.Instruccion;
 import com.rudyreyes.javacraft.modelo.errores.Errores;
 import com.rudyreyes.javacraft.modelo.instrucciones.sentenciasTransferencia.SentenciaBreak;
+import com.rudyreyes.javacraft.modelo.instrucciones.sentenciasTransferencia.SentenciaContinue;
 import com.rudyreyes.javacraft.modelo.simbolo.Arbol;
 import com.rudyreyes.javacraft.modelo.simbolo.TablaSimbolos;
 import com.rudyreyes.javacraft.modelo.simbolo.Tipo;
@@ -45,11 +46,21 @@ public class SentenciaDoWhile extends Instruccion{
         
         do{
             var newTabla = new TablaSimbolos(tabla);
+            newTabla.setNombre(tabla.getNombre()+"-do:while");
+            arbol.agregarTablaEntorno(newTabla);
 
             //ejecutar instrucciones
             for (var i : this.instrucciones) {
                 if (i instanceof SentenciaBreak) {
                     return null;
+                }
+                
+                if (i instanceof SentenciaContinue) {
+                    break;
+                }
+                
+                if(i == null){
+                    continue;
                 }
                 var resIns = i.interpretar(arbol, newTabla);
                 if (resIns instanceof SentenciaBreak) {

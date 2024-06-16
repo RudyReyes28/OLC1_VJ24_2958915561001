@@ -68,7 +68,7 @@ public class DeclaracionVariable extends Instruccion{
             return new Errores("SEMANTICO", "Tipo de dato erroneo, no se puede asignar el valor de tipo "+this.valor.tipo.getTipo()+ " a la variable de tipo "+ this.tipo.getTipo(), this.linea, this.columna);
         }
 
-        Simbolo s = new Simbolo(mutabilidad,this.tipo, this.identificador, valorInterpretado);
+        Simbolo s = new Simbolo(mutabilidad,this.tipo, this.identificador, valorInterpretado, this.linea, this.columna);
 
         boolean creacion = tabla.setVariable(s);
         if (!creacion) {

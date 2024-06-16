@@ -58,7 +58,7 @@ terminal LLAVE1, LLAVE2, IF, ELSE, MATCH, FLECHA, DEFAULT, FOR, WHILE,DO;
 terminal DOBLEIGUAL, DIFERENTE, MENOR, MENORIGUAL, MAYOR, MAYORIGUAL;
 terminal NOT, XOR, OR, AND;
 terminal INT, CHAR, DOUBLE, STRING, BOOL;
-terminal DOSPUNTOS, IGUAL, CORCHETE1, CORCHETE2;
+terminal DOSPUNTOS, IGUAL;
 terminal CONST, VAR;
 terminal String BOOLEAN, CARACTER, BREAK, CONTINUE;
 
@@ -177,7 +177,7 @@ actualizar_for ::= ID:a IGUAL expresion:b  {:   RESULT=new AsignacionVariable(a,
 ciclo_while ::= WHILE PAR1 expresion:a PAR2 LLAVE1 instrucciones:b LLAVE2  {:   RESULT = new SentenciaWhile(a, b, aleft, aright);   :}
 ;
 
-ciclo_dowhile ::= DO LLAVE1 CORCHETE1  instrucciones:b CORCHETE2 LLAVE2 WHILE PAR1 expresion:a PAR2  FINCADENA {:   RESULT = new SentenciaDoWhile(a, b, aleft, aright);   :}
+ciclo_dowhile ::= DO LLAVE1  instrucciones:b  LLAVE2 WHILE PAR1 expresion:a PAR2  FINCADENA {:   RESULT = new SentenciaDoWhile(a, b, aleft, aright);   :}
 ;
 
 

@@ -6,7 +6,9 @@ package com.rudyreyes.javacraft.modelo.simbolo;
 
 import com.rudyreyes.javacraft.modelo.abstracto.Instruccion;
 import com.rudyreyes.javacraft.modelo.errores.Errores;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  *
@@ -18,13 +20,14 @@ public class Arbol {
     private String consola;
     private TablaSimbolos tablaGlobal;
     public  LinkedList<Errores> errores;
+    public List<TablaSimbolos> tablasEntornos;
 
     public Arbol(LinkedList<Instruccion> instrucciones) {
         this.instrucciones = instrucciones;
         this.consola = "";
         this.tablaGlobal = new TablaSimbolos();
         this.errores = new LinkedList<>();
-        
+        this.tablasEntornos = new ArrayList<>();
     }
 
     public LinkedList<Instruccion> getInstrucciones() {
@@ -58,6 +61,37 @@ public class Arbol {
     public void setErrores(LinkedList<Errores> errores) {
         this.errores = errores;
     }
+    
+    public void agregarTablaEntorno(TablaSimbolos tabla) {
+        this.tablasEntornos.add(tabla);
+    }
+    
+    public List<EntornoSimbolos> getTodosLosSimbolos() {
+        List<EntornoSimbolos> todosLosSimbolos = new ArrayList<>();
+
+        for (TablaSimbolos tabla : tablasEntornos) {
+            List<Simbolo> simbolos = tabla.getSimbolosTablaActual();
+            EntornoSimbolos entornoSimbolos = new EntornoSimbolos(tabla.getNombre(), simbolos);
+            todosLosSimbolos.add(entornoSimbolos);
+        }
+
+        // Agregar los símbolos de la tabla global
+        List<Simbolo> simbolosGlobales = tablaGlobal.getSimbolosTablaActual();
+        EntornoSimbolos entornoGlobal = new EntornoSimbolos(tablaGlobal.getNombre(), simbolosGlobales);
+        todosLosSimbolos.add(entornoGlobal);
+
+        return todosLosSimbolos;
+    }
+
+    public void mostrarTodosLosSimbolos() {
+    List<EntornoSimbolos> todosLosSimbolos = getTodosLosSimbolos();
+    for (EntornoSimbolos entornoSimbolos : todosLosSimbolos) {
+        System.out.println("Entorno: " + entornoSimbolos.getNombreEntorno());
+        for (Simbolo simbolo : entornoSimbolos.getSimbolos()) {
+            System.out.println(simbolo.imprimirSimbolo());
+        }
+    }
+}
     
     
     public void Println(String valor){

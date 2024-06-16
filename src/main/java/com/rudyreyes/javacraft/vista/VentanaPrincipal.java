@@ -286,6 +286,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                     for (var i : lista) {
                         areaConsola.append(i.toString()+"\n");
                     }
+                    ast.setTablaGlobal(tabla);
+                    //tabla.mostrarSimbolosTablaActual();
+                    ast.mostrarTodosLosSimbolos();
                 }
                 
                 

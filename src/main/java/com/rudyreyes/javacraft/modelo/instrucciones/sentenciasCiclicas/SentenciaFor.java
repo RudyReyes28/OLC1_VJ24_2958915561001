@@ -36,6 +36,8 @@ public class SentenciaFor extends Instruccion{
     public Object interpretar(Arbol arbol, TablaSimbolos tabla) {
         //creamos un nuevo entorno
         var newTabla = new TablaSimbolos(tabla);
+        newTabla.setNombre(tabla.getNombre()+"-for");
+        arbol.agregarTablaEntorno(newTabla);
 
         // asignacion/declaracion
         var asignacion = this.asignacion.interpretar(arbol, newTabla);
@@ -57,6 +59,8 @@ public class SentenciaFor extends Instruccion{
         while ((boolean) this.condicion.interpretar(arbol, newTabla)) {
             //nuevo entorno
             var newTabla2 = new TablaSimbolos(newTabla);
+            newTabla2.setNombre(tabla.getNombre()+"-for");
+            arbol.agregarTablaEntorno(newTabla2);
 
             //ejecutar instrucciones
             for (var i : this.instrucciones) {
@@ -66,6 +70,11 @@ public class SentenciaFor extends Instruccion{
                 if (i instanceof SentenciaContinue) {
                     break;
                 }
+                
+                if(i == null){
+                    continue;
+                }
+                
                 var resIns = i.interpretar(arbol, newTabla2);
                 if (resIns instanceof SentenciaBreak) {
                     return null;

@@ -12,6 +12,8 @@ public class Simbolo {
     private boolean mutable;
     private Tipo tipo;
     private String id;
+    private int linea;
+    private int columna;
     private Object valor;
 
     public Simbolo(Tipo tipo, String id) {
@@ -19,11 +21,13 @@ public class Simbolo {
         this.id = id;
     }
 
-    public Simbolo(boolean mutable, Tipo tipo, String id, Object valor) {
+    public Simbolo(boolean mutable, Tipo tipo, String id, Object valor, int linea, int columna) {
         this.mutable = mutable;
         this.tipo = tipo;
         this.id = id;
         this.valor = valor;
+        this.linea = linea;
+        this.columna = columna;
     }
     
     //true = var
@@ -60,7 +64,28 @@ public class Simbolo {
     public void setValor(Object valor) {
         this.valor = valor;
     }
+
+    public int getLinea() {
+        return linea;
+    }
+
+    public void setLinea(int linea) {
+        this.linea = linea;
+    }
+
+    public int getColumna() {
+        return columna;
+    }
+
+    public void setColumna(int columna) {
+        this.columna = columna;
+    }
     
+    
+    
+    public String imprimirSimbolo(){
+        return ("Tipo"+this.tipo.getTipo()+" ID: " +id+" valor: "+ valor+ " Linea "+linea+" columna "+columna);
+    }
     
     
 }

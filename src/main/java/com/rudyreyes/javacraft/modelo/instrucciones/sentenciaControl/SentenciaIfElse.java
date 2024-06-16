@@ -44,6 +44,8 @@ public class SentenciaIfElse extends Instruccion{
         }
         
         var newTabla = new TablaSimbolos(tabla);
+        newTabla.setNombre(tabla.getNombre()+"-if:else");
+        arbol.agregarTablaEntorno(newTabla);
         if ((boolean) cond) {
             for (var i : this.instrucciones) {
                 if (i instanceof SentenciaBreak) {
@@ -53,6 +55,11 @@ public class SentenciaIfElse extends Instruccion{
                 if (i instanceof SentenciaContinue) {
                     return i;
                 }
+                
+                if(i == null){
+                    continue;
+                }
+                
                 var resultado = i.interpretar(arbol, newTabla);
                 if (resultado instanceof SentenciaBreak) {
                     return resultado;
@@ -75,6 +82,11 @@ public class SentenciaIfElse extends Instruccion{
                 if (i instanceof SentenciaContinue) {
                     return i;
                 }
+                
+                if(i == null){
+                    continue;
+                }
+                
                 var resultado = i.interpretar(arbol, newTabla);
                 if (resultado instanceof SentenciaBreak) {
                     return resultado;

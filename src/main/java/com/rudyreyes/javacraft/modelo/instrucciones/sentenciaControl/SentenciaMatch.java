@@ -39,7 +39,8 @@ public class SentenciaMatch extends Instruccion{
         
         
         var newTabla = new TablaSimbolos(tabla);
-       
+        newTabla.setNombre(tabla.getNombre()+"-match");
+        arbol.agregarTablaEntorno(newTabla);
         if (this.casos != null) {
             for (CasoMatch c : this.casos) {
                 var condCaso = c.getCaso().interpretar(arbol, tabla);
