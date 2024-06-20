@@ -292,7 +292,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                     ast.setTablaGlobal(tabla);
                     //tabla.mostrarSimbolosTablaActual();
                     //ast.mostrarTodosLosSimbolos();
-                    listaSimbolos =ast.getTodosLosSimbolos();
+                    //listaSimbolos =ast.getTodosLosSimbolos();
                 }
                 
                 

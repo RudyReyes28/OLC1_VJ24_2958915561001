@@ -11,6 +11,7 @@ import com.rudyreyes.javacraft.modelo.instrucciones.*;
 import com.rudyreyes.javacraft.modelo.instrucciones.sentenciaControl.*;
 import com.rudyreyes.javacraft.modelo.instrucciones.sentenciasTransferencia.*;
 import com.rudyreyes.javacraft.modelo.instrucciones.sentenciasCiclicas.*;
+import com.rudyreyes.javacraft.modelo.instrucciones.vectores.*;
 
 //expresiones
 import com.rudyreyes.javacraft.modelo.expresiones.Nativo;
@@ -19,6 +20,7 @@ import com.rudyreyes.javacraft.modelo.expresiones.relacionales.*;
 import com.rudyreyes.javacraft.modelo.expresiones.logicas.*;
 import com.rudyreyes.javacraft.modelo.expresiones.casteos.*;
 import com.rudyreyes.javacraft.modelo.expresiones.variables.*;
+import com.rudyreyes.javacraft.modelo.expresiones.accesovector.*;
 import com.rudyreyes.javacraft.modelo.errores.*;
 
 
@@ -58,7 +60,7 @@ terminal LLAVE1, LLAVE2, IF, ELSE, MATCH, FLECHA, DEFAULT, FOR, WHILE,DO;
 terminal DOBLEIGUAL, DIFERENTE, MENOR, MENORIGUAL, MAYOR, MAYORIGUAL;
 terminal NOT, XOR, OR, AND;
 terminal INT, CHAR, DOUBLE, STRING, BOOL;
-terminal DOSPUNTOS, IGUAL;
+terminal DOSPUNTOS, IGUAL, CORCHETE1, CORCHETE2, COMA;
 terminal CONST, VAR;
 terminal String BOOLEAN, CARACTER, BREAK, CONTINUE;
 
@@ -71,10 +73,12 @@ nonterminal Instruccion inicializar_variable, incremento_variable, decremento_va
 nonterminal Instruccion sentencia_if, sentencia_match;
 nonterminal Instruccion ciclo_for, ciclo_while, ciclo_dowhile, actualizar_for;
 nonterminal Instruccion transferencia_break, transferencia_continue;
+nonterminal Instruccion declaracion_vectores;
 nonterminal Tipo tipos_variable;
 nonterminal Boolean  mutabilidad;
 nonterminal CasoMatch caso_match;
 nonterminal LinkedList<CasoMatch> casos_match;
+nonterminal LinkedList<Instruccion> lista_vector_u;
 
 precedence left OR;
 precedence left AND;
@@ -97,6 +101,7 @@ instrucciones ::= instrucciones:a instruccion:b     {: RESULT = a; RESULT.add(b)
 
 instruccion ::= println:a {: RESULT= a; :}
              | declaracion_variable:a {: RESULT= a; :}
+             | declaracion_vectores:a {:RESULT = a; :}
              | asignacion_variable:a {: RESULT= a; :}
              | incremento_variable: a {: RESULT= a; :}
              | decremento_variable: a {: RESULT= a; :}
@@ -131,6 +136,14 @@ incremento_variable ::= ID:a MAS MAS FINCADENA
 
 decremento_variable ::= ID:a MENOS MENOS FINCADENA 
 {: RESULT=new IncrementoDecreVariable(a, new OperacionResta(new AccesoVariable(a, aleft, aright), new Nativo(1, new Tipo(TipoDato.ENTERO), aleft, aright ),aleft, aright) , aleft, aright);  :}
+;
+
+declaracion_vectores ::= mutabilidad:e ID:b DOSPUNTOS tipos_variable:a CORCHETE1 CORCHETE2 IGUAL CORCHETE1 lista_vector_u:c CORCHETE2 FINCADENA {: RESULT = new VectorUnaDimension(e,b, c, a, aleft, aright); :}
+
+;
+
+lista_vector_u ::= lista_vector_u:a COMA expresion:b {:RESULT =a; RESULT.add(b); :}
+		| expresion:a {: RESULT = new LinkedList<> (); RESULT.add(a); :}
 ;
 
 sentencia_if ::= IF PAR1 expresion:a PAR2 LLAVE1 instrucciones:b LLAVE2  {:   RESULT = new SentenciaIf(a, b, aleft, aright);   :}
@@ -209,6 +222,7 @@ expresion ::=  expresionAritmetica:a {: RESULT = a; :}
             | CARACTER:a    {:   RESULT = new Nativo(a, new Tipo(TipoDato.CARACTER), aleft, aright );   :}
             | BOOLEAN:a     {:   RESULT = new Nativo(Boolean.parseBoolean(a), new Tipo(TipoDato.BOOLEANO), aleft, aright );   :}
             | ID:a          {:   RESULT = new AccesoVariable(a, aleft, aright);   :}
+            | ID:a CORCHETE1 expresion:b CORCHETE2 {: RESULT = new AccesoVectorUnaDimension(a, b, aleft, aright );:}
             
 ;
 

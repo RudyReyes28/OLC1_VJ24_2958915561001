@@ -32,19 +32,19 @@ public class DeclaracionVariable extends Instruccion{
         if(valor ==null){
             switch (tipo.getTipo()){
                 case ENTERO:
-                    valor =  new Nativo(0, new Tipo(TipoDato.ENTERO), linea-1, columna-1 );
+                    valor =  new Nativo(0, new Tipo(TipoDato.ENTERO), linea, columna-1 );
                     break;
                 case DECIMAL:
-                    valor =  new Nativo(0.0, new Tipo(TipoDato.DECIMAL), linea-1, columna-1 );
+                    valor =  new Nativo(0.0, new Tipo(TipoDato.DECIMAL), linea, columna-1 );
                     break;
                 case CADENA:
-                    valor =  new Nativo("", new Tipo(TipoDato.CADENA), linea-1, columna-1 );
+                    valor =  new Nativo("", new Tipo(TipoDato.CADENA), linea, columna-1 );
                     break;
                 case CARACTER:
-                    valor =  new Nativo('0', new Tipo(TipoDato.CARACTER), linea-1, columna-1 );
+                    valor =  new Nativo('0', new Tipo(TipoDato.CARACTER), linea, columna-1 );
                     break;
                 case BOOLEANO:
-                    valor =  new Nativo(true, new Tipo(TipoDato.BOOLEANO), linea-1, columna-1 );
+                    valor =  new Nativo(true, new Tipo(TipoDato.BOOLEANO), linea, columna-1 );
                     break;
             }
         }
