@@ -15,14 +15,16 @@ import com.rudyreyes.javacraft.modelo.simbolo.TipoDato;
  *
  * @author rudyo
  */
-public class AccesoVectorUnaDimension extends Instruccion{
+public class AccesoVectorDosDimensiones extends Instruccion{
     private String identificador;
-    private Instruccion posicion;
+    private Instruccion posicion1;
+    private Instruccion posicion2;
 
-    public AccesoVectorUnaDimension(String identificador, Instruccion posicion, int linea, int columna) {
+    public AccesoVectorDosDimensiones(String identificador, Instruccion posicion1, Instruccion posicion2, int linea, int columna) {
         super(new Tipo(TipoDato.VOID), linea, columna);
         this.identificador = identificador;
-        this.posicion = posicion;
+        this.posicion1 = posicion1;
+        this.posicion2 = posicion2;
     }
 
     @Override
@@ -33,35 +35,50 @@ public class AccesoVectorUnaDimension extends Instruccion{
             return new Errores("SEMANTICO", "El vector \" " + this.identificador+" \" no existe",
                     this.linea, this.columna);
         }
-        var p = this.posicion.interpretar(arbol, tabla);
         
-        if(p instanceof Errores){
-            return p;
+        var primeraP = posicion1.interpretar(arbol, tabla);
+        if(primeraP instanceof Errores){
+            return primeraP;
         }
         
-        if(this.posicion.tipo.getTipo() != TipoDato.ENTERO){
+        if(this.posicion1.tipo.getTipo() != TipoDato.ENTERO){
+            return new  Errores("SEMANTICO", "La posicion vector \" " + this.identificador+" \" no es del tipo de dato entero",
+                    this.linea, this.columna);
+        }
+        
+        
+        var segundaP = posicion2.interpretar(arbol, tabla);
+        if(segundaP instanceof Errores){
+            return segundaP;
+        }
+        
+        if(this.posicion2.tipo.getTipo() != TipoDato.ENTERO){
             return new  Errores("SEMANTICO", "La posicion vector \" " + this.identificador+" \" no es del tipo de dato entero",
                     this.linea, this.columna);
         }
         
         var valor = vector.getValor();
         
-        if(valor instanceof Object[]){
-            Object [] resultado = (Object []) valor;
+        if(valor instanceof Object[][]){
+            Object [][] resultado = (Object [][]) valor;
             
-            if((int)p>=resultado.length){
-                return new  Errores("SEMANTICO", "La posicion  \" " + p+" \" es mayor que la longitud del vector",
+            if((int)primeraP>=resultado.length){
+                return new  Errores("SEMANTICO", "La posicion  \" " + primeraP+" \" es mayor que la longitud del vector",
+                    this.linea, this.columna);
+            }
+            
+            if((int)segundaP>=resultado[(int)primeraP].length){
+                return new  Errores("SEMANTICO", "La posicion  \" " + segundaP+" \" es mayor que la longitud del vector",
                     this.linea, this.columna);
             }
             this.tipo.setTipo(vector.getTipo().getTipo());
-            return resultado[(int)p];
+            return resultado[(int)primeraP][(int)segundaP];
         }
-        
         
         return new  Errores("SEMANTICO", "La variable \" " + this.identificador+" \" no es un vector",
                     this.linea, this.columna);
+
     }
-    
     
     
     
