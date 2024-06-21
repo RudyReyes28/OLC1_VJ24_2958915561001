@@ -73,7 +73,7 @@ nonterminal Instruccion inicializar_variable, incremento_variable, decremento_va
 nonterminal Instruccion sentencia_if, sentencia_match;
 nonterminal Instruccion ciclo_for, ciclo_while, ciclo_dowhile, actualizar_for;
 nonterminal Instruccion transferencia_break, transferencia_continue;
-nonterminal Instruccion declaracion_vectores;
+nonterminal Instruccion declaracion_vectores, asignacion_vector;
 nonterminal Tipo tipos_variable;
 nonterminal Boolean  mutabilidad;
 nonterminal CasoMatch caso_match;
@@ -104,6 +104,7 @@ instruccion ::= println:a {: RESULT= a; :}
              | declaracion_variable:a {: RESULT= a; :}
              | declaracion_vectores:a {:RESULT = a; :}
              | asignacion_variable:a {: RESULT= a; :}
+             | asignacion_vector:a {: RESULT= a; :}
              | incremento_variable: a {: RESULT= a; :}
              | decremento_variable: a {: RESULT= a; :}
              | sentencia_if : a {: RESULT= a; :}
@@ -149,6 +150,10 @@ lista_vector_u ::= lista_vector_u:a COMA expresion:b {:RESULT =a; RESULT.add(b);
 
 lista_vector_d ::= lista_vector_d:a COMA CORCHETE1 lista_vector_u:b CORCHETE2 {:RESULT =a; RESULT.add(b); :}
                 | CORCHETE1 lista_vector_u:a  CORCHETE2 {: RESULT = new LinkedList<> (); RESULT.add(a); :}
+;
+
+asignacion_vector ::= ID:a CORCHETE1 expresion:b CORCHETE2 IGUAL expresion:c FINCADENA {:   RESULT=new AsignacionVectorUnaDimension(a, b, c, aleft, aright);  :}
+                    | ID:a CORCHETE1 expresion:b CORCHETE2 CORCHETE1 expresion:c CORCHETE2 IGUAL expresion:d FINCADENA {:   RESULT=new AsignacionVectorDosDimensiones(a, b, c, d, aleft, aright);  :}
 ;
 
 sentencia_if ::= IF PAR1 expresion:a PAR2 LLAVE1 instrucciones:b LLAVE2  {:   RESULT = new SentenciaIf(a, b, aleft, aright);   :}
