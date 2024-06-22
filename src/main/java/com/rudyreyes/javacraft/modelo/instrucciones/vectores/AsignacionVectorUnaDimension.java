@@ -10,6 +10,7 @@ import com.rudyreyes.javacraft.modelo.simbolo.Arbol;
 import com.rudyreyes.javacraft.modelo.simbolo.TablaSimbolos;
 import com.rudyreyes.javacraft.modelo.simbolo.Tipo;
 import com.rudyreyes.javacraft.modelo.simbolo.TipoDato;
+import java.util.List;
 
 /**
  *
@@ -80,8 +81,17 @@ public class AsignacionVectorUnaDimension extends Instruccion{
             variable.setValor(resultado);
             variable.setLinea(this.linea);
             variable.setColumna(this.columna);
+        
+        }else if(arreglo instanceof List){
+            if((int)posicionV>=((List<Object>) arreglo).size() ){
+                return new  Errores("SEMANTICO", "La posicion  \" " + posicionV+" \" es mayor que la longitud de la lista",
+                    this.linea, this.columna);
+            }
+            
+            ((List<Object>) arreglo).set((int)posicionV, nuevoValor);
+            
         }else{
-            return new Errores("SEMANTICO", "La variable \" " + this.id+" \" no es un vector",
+            return new Errores("SEMANTICO", "La variable \" " + this.id+" \" no es un vector o una lista",
                     this.linea, this.columna);
         }
         

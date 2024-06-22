@@ -12,7 +12,7 @@ import com.rudyreyes.javacraft.modelo.instrucciones.sentenciaControl.*;
 import com.rudyreyes.javacraft.modelo.instrucciones.sentenciasTransferencia.*;
 import com.rudyreyes.javacraft.modelo.instrucciones.sentenciasCiclicas.*;
 import com.rudyreyes.javacraft.modelo.instrucciones.vectores.*;
-
+import com.rudyreyes.javacraft.modelo.instrucciones.listas.*;
 //expresiones
 import com.rudyreyes.javacraft.modelo.expresiones.Nativo;
 import com.rudyreyes.javacraft.modelo.expresiones.aritmeticas.*;
@@ -61,7 +61,7 @@ terminal DOBLEIGUAL, DIFERENTE, MENOR, MENORIGUAL, MAYOR, MAYORIGUAL;
 terminal NOT, XOR, OR, AND;
 terminal INT, CHAR, DOUBLE, STRING, BOOL;
 terminal DOSPUNTOS, IGUAL, CORCHETE1, CORCHETE2, COMA;
-terminal CONST, VAR;
+terminal CONST, VAR, LIST, NEW, PUNTO, APPEND, REMOVE;
 terminal String BOOLEAN, CARACTER, BREAK, CONTINUE;
 
 //no terminales
@@ -74,6 +74,7 @@ nonterminal Instruccion sentencia_if, sentencia_match;
 nonterminal Instruccion ciclo_for, ciclo_while, ciclo_dowhile, actualizar_for;
 nonterminal Instruccion transferencia_break, transferencia_continue;
 nonterminal Instruccion declaracion_vectores, asignacion_vector;
+nonterminal Instruccion declaracion_lista, append_lista;
 nonterminal Tipo tipos_variable;
 nonterminal Boolean  mutabilidad;
 nonterminal CasoMatch caso_match;
@@ -103,6 +104,8 @@ instrucciones ::= instrucciones:a instruccion:b     {: RESULT = a; RESULT.add(b)
 instruccion ::= println:a {: RESULT= a; :}
              | declaracion_variable:a {: RESULT= a; :}
              | declaracion_vectores:a {:RESULT = a; :}
+             | declaracion_lista:a {:RESULT = a; :}
+             | append_lista:a {:RESULT = a; :}
              | asignacion_variable:a {: RESULT= a; :}
              | asignacion_vector:a {: RESULT= a; :}
              | incremento_variable: a {: RESULT= a; :}
@@ -156,6 +159,14 @@ asignacion_vector ::= ID:a CORCHETE1 expresion:b CORCHETE2 IGUAL expresion:c FIN
                     | ID:a CORCHETE1 expresion:b CORCHETE2 CORCHETE1 expresion:c CORCHETE2 IGUAL expresion:d FINCADENA {:   RESULT=new AsignacionVectorDosDimensiones(a, b, c, d, aleft, aright);  :}
 ;
 
+declaracion_lista ::= LIST MENOR tipos_variable:a MAYOR ID:b IGUAL NEW LIST PAR1 PAR2 FINCADENA {:RESULT = new DeclaracionLista(b,a, aleft, aright ); :}
+
+;
+
+
+append_lista ::= ID:a PUNTO APPEND PAR1 expresion:b PAR2 FINCADENA {: RESULT = new AppendLista(a, b, aleft, aright);:}
+
+;
 sentencia_if ::= IF PAR1 expresion:a PAR2 LLAVE1 instrucciones:b LLAVE2  {:   RESULT = new SentenciaIf(a, b, aleft, aright);   :}
                 | IF PAR1 expresion:a PAR2 LLAVE1 instrucciones:b LLAVE2 ELSE LLAVE1 instrucciones:c LLAVE2 {:   RESULT = new SentenciaIfElse(a, b, c, aleft, aright);   :}
                 | IF PAR1 expresion:a PAR2 LLAVE1 instrucciones:b LLAVE2 ELSE sentencia_if:c {:   RESULT = new SentenciaElseIF(a, b, c, aleft, aright);   :}
@@ -234,6 +245,7 @@ expresion ::=  expresionAritmetica:a {: RESULT = a; :}
             | ID:a          {:   RESULT = new AccesoVariable(a, aleft, aright);   :}
             | ID:a CORCHETE1 expresion:b CORCHETE2 {: RESULT = new AccesoVectorUnaDimension(a, b, aleft, aright );:}
             | ID:a CORCHETE1 expresion:b CORCHETE2 CORCHETE1 expresion:c CORCHETE2 {: RESULT = new AccesoVectorDosDimensiones(a, b, c, aleft, aright );:}
+            | ID:a PUNTO REMOVE PAR1 expresion:b PAR2 {:RESULT = new RemoveLista(a, b, aleft, aright);  :}
 ;
 
 

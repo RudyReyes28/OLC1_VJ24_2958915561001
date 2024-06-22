@@ -45,6 +45,7 @@ LLAVE2="}"
 CORCHETE1 = "["
 CORCHETE2 = "]"
 COMA = ","
+PUNTO = "."
 
 //simbolos de op relacionales
 DOBLEIGUAL = "=="
@@ -96,6 +97,10 @@ WHILE = "while"
 DO = "do"
 BREAK = "break"
 CONTINUE = "continue"
+LIST = "list"
+NEW = "new"
+APPEND = "append"
+REMOVE = "remove"
 %%
 <YYINITIAL> {IMPRIMIR}  {return new Symbol(sym.IMPRIMIR, yyline, yycolumn,yytext());}
 <YYINITIAL> {CONST}     {return new Symbol(sym.CONST, yyline, yycolumn,yytext());}
@@ -115,8 +120,10 @@ CONTINUE = "continue"
 <YYINITIAL> {DO}        {return new Symbol(sym.DO, yyline, yycolumn,yytext());}
 <YYINITIAL> {BREAK}        {return new Symbol(sym.BREAK, yyline, yycolumn,yytext());}
 <YYINITIAL> {CONTINUE}        {return new Symbol(sym.CONTINUE, yyline, yycolumn,yytext());}
-
-
+<YYINITIAL> {LIST}        {return new Symbol(sym.LIST, yyline, yycolumn,yytext());}
+<YYINITIAL> {NEW}        {return new Symbol(sym.NEW, yyline, yycolumn,yytext());}
+<YYINITIAL> {APPEND}        {return new Symbol(sym.APPEND, yyline, yycolumn,yytext());}
+<YYINITIAL> {REMOVE}        {return new Symbol(sym.REMOVE, yyline, yycolumn,yytext());}
 
 <YYINITIAL> {DECIMAL}   {return new Symbol(sym.DECIMAL, yyline, yycolumn,yytext());}
 <YYINITIAL> {ENTERO}    {return new Symbol(sym.ENTERO, yyline, yycolumn,yytext());}
@@ -148,6 +155,7 @@ CONTINUE = "continue"
 <YYINITIAL> {CORCHETE1}        {return new Symbol(sym.CORCHETE1, yyline, yycolumn,yytext());}
 <YYINITIAL> {CORCHETE2}        {return new Symbol(sym.CORCHETE2, yyline, yycolumn,yytext());}
 <YYINITIAL> {COMA}        {return new Symbol(sym.COMA, yyline, yycolumn,yytext());}
+<YYINITIAL> {PUNTO}        {return new Symbol(sym.PUNTO, yyline, yycolumn,yytext());}
 <YYINITIAL> {DOSPUNTOS}     {return new Symbol(sym.DOSPUNTOS, yyline, yycolumn,yytext());}
 
 <YYINITIAL> {MAS}           {return new Symbol(sym.MAS, yyline, yycolumn,yytext());}

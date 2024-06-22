@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.rudyreyes.javacraft.modelo.expresiones.accesovector;
+package com.rudyreyes.javacraft.modelo.instrucciones.listas;
 
 import com.rudyreyes.javacraft.modelo.abstracto.Instruccion;
 import com.rudyreyes.javacraft.modelo.errores.Errores;
@@ -16,22 +16,22 @@ import java.util.List;
  *
  * @author rudyo
  */
-public class AccesoVectorUnaDimension extends Instruccion{
-    private String identificador;
+public class RemoveLista extends Instruccion{
+    private String id;
     private Instruccion posicion;
 
-    public AccesoVectorUnaDimension(String identificador, Instruccion posicion, int linea, int columna) {
+    public RemoveLista(String id, Instruccion posicion, int linea, int columna) {
         super(new Tipo(TipoDato.VOID), linea, columna);
-        this.identificador = identificador;
+        this.id = id;
         this.posicion = posicion;
     }
 
     @Override
     public Object interpretar(Arbol arbol, TablaSimbolos tabla) {
-        var vector = tabla.getVariable(identificador);
+        var lista = tabla.getVariable(id);
         
-        if (vector == null) {
-            return new Errores("SEMANTICO", "El vector \" " + this.identificador+" \" no existe",
+        if (lista == null) {
+            return new Errores("SEMANTICO", "La lista \" " + this.id+" \" no existe",
                     this.linea, this.columna);
         }
         var p = this.posicion.interpretar(arbol, tabla);
@@ -41,35 +41,27 @@ public class AccesoVectorUnaDimension extends Instruccion{
         }
         
         if(this.posicion.tipo.getTipo() != TipoDato.ENTERO){
-            return new  Errores("SEMANTICO", "La posicion vector \" " + this.identificador+" \" no es del tipo de dato entero",
+            return new  Errores("SEMANTICO", "La posicion de la lista \" " + this.id+" \" no es del tipo de dato entero",
                     this.linea, this.columna);
         }
         
-        var valor = vector.getValor();
+        var valor = lista.getValor();
         
-        if(valor instanceof Object[]){
-            Object [] resultado = (Object []) valor;
-            
-            if((int)p>=resultado.length){
-                return new  Errores("SEMANTICO", "La posicion  \" " + p+" \" es mayor que la longitud del vector",
-                    this.linea, this.columna);
-            }
-            this.tipo.setTipo(vector.getTipo().getTipo());
-            return resultado[(int)p];
-        }
-        //COMO EL ACCESO ES IGUAL, VERIFICAMOS SI NO ES UNA LISTA
         if(valor instanceof List){
             if((int)p>=((List<Object>) valor).size() ){
                 return new  Errores("SEMANTICO", "La posicion  \" " + p+" \" es mayor que la longitud de la lista",
                     this.linea, this.columna);
             }
-            this.tipo.setTipo(vector.getTipo().getTipo());
-            return ((List<Object>) valor).get((int)p);
+            this.tipo.setTipo(lista.getTipo().getTipo());
+            var resultado =  ((List<Object>) valor).get((int)p);
+            ((List<Object>) valor).remove((int)p);
+            
+            return resultado;
+        }else{
+            return new Errores("SEMANTICO", "La variable \" " + this.id+" \" no es una lista",
+                    this.linea, this.columna);
         }
         
-        
-        return new  Errores("SEMANTICO", "La variable \" " + this.identificador+" \" no es un vector o una lista",
-                    this.linea, this.columna);
     }
     
     
