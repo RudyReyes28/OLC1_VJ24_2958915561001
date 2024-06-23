@@ -5,6 +5,7 @@ import java_cup.runtime.Symbol;
 import java.util.LinkedList;
 import com.rudyreyes.javacraft.modelo.abstracto.Instruccion;
 import com.rudyreyes.javacraft.modelo.simbolo.*;
+import java.util.HashMap;
 
 //instrucciones
 import com.rudyreyes.javacraft.modelo.instrucciones.*;
@@ -13,6 +14,7 @@ import com.rudyreyes.javacraft.modelo.instrucciones.sentenciasTransferencia.*;
 import com.rudyreyes.javacraft.modelo.instrucciones.sentenciasCiclicas.*;
 import com.rudyreyes.javacraft.modelo.instrucciones.vectores.*;
 import com.rudyreyes.javacraft.modelo.instrucciones.listas.*;
+import com.rudyreyes.javacraft.modelo.instrucciones.metodos.*;
 //expresiones
 import com.rudyreyes.javacraft.modelo.expresiones.Nativo;
 import com.rudyreyes.javacraft.modelo.expresiones.aritmeticas.*;
@@ -63,7 +65,7 @@ terminal NOT, XOR, OR, AND;
 terminal INT, CHAR, DOUBLE, STRING, BOOL;
 terminal DOSPUNTOS, IGUAL, CORCHETE1, CORCHETE2, COMA;
 terminal CONST, VAR, LIST, NEW, PUNTO, APPEND, REMOVE;
-terminal ROUND, LENGTH, TOSTRING, FIND;
+terminal ROUND, LENGTH, TOSTRING, FIND, STARTWITH, VOID;
 terminal String BOOLEAN, CARACTER, BREAK, CONTINUE;
 
 //no terminales
@@ -85,6 +87,12 @@ nonterminal LinkedList<CasoMatch> casos_match;
 nonterminal LinkedList<Instruccion> lista_vector_u;
 nonterminal LinkedList<LinkedList<Instruccion>> lista_vector_d;
 
+//METODOS Y FUNCIONES
+nonterminal Instruccion metodo;
+nonterminal LinkedList<HashMap> parametros_metodo;
+nonterminal Instruccion instruccion_start;
+nonterminal LinkedList<Instruccion> parametros_llamada;
+
 precedence left OR;
 precedence left AND;
 precedence left XOR;
@@ -101,25 +109,27 @@ inicio ::= instrucciones:a      {:   RESULT = a;   :}
 ;
 
 instrucciones ::= instrucciones:a instruccion:b     {: RESULT = a; RESULT.add(b); :}
-                | instruccion:a                   {: RESULT = new LinkedList<>(); RESULT.add(a); :}
+                | instruccion:a                     {: RESULT = new LinkedList<>(); RESULT.add(a); :}
 ;
 
-instruccion ::= println:a {: RESULT= a; :}
-             | declaracion_variable:a {: RESULT= a; :}
-             | declaracion_vectores:a {:RESULT = a; :}
-             | declaracion_lista:a {:RESULT = a; :}
-             | append_lista:a {:RESULT = a; :}
-             | asignacion_variable:a {: RESULT= a; :}
-             | asignacion_vector:a {: RESULT= a; :}
-             | incremento_variable: a {: RESULT= a; :}
-             | decremento_variable: a {: RESULT= a; :}
-             | sentencia_if : a {: RESULT= a; :}
-             | sentencia_match : a {: RESULT= a; :}
-             | ciclo_for: a {: RESULT= a; :}
-             | ciclo_while: a {: RESULT= a; :}
-             | ciclo_dowhile: a {: RESULT= a; :}
-             | transferencia_break: a {: RESULT= a; :}
-             | transferencia_continue: a {: RESULT= a; :}
+instruccion ::= println:a                   {: RESULT= a; :}
+             | declaracion_variable:a       {: RESULT= a; :}
+             | declaracion_vectores:a       {:RESULT = a; :}
+             | declaracion_lista:a          {:RESULT = a; :}
+             | append_lista:a               {:RESULT = a; :}
+             | asignacion_variable:a        {: RESULT= a; :}
+             | asignacion_vector:a          {: RESULT= a; :}
+             | incremento_variable:a        {: RESULT= a; :}
+             | decremento_variable:a        {: RESULT= a; :}
+             | sentencia_if :a              {: RESULT= a; :}
+             | sentencia_match:a            {: RESULT= a; :}
+             | ciclo_for:a                  {: RESULT= a; :}
+             | ciclo_while:a                {: RESULT= a; :}
+             | ciclo_dowhile:a              {: RESULT= a; :}
+             | transferencia_break:a        {: RESULT= a; :}
+             | transferencia_continue:a     {: RESULT= a; :}
+             | metodo:a                     {: RESULT= a; :}
+             | instruccion_start:a          {: RESULT= a; :}
              | error FINCADENA
              | error 
 ;
@@ -224,29 +234,63 @@ transferencia_break::=  BREAK:a FINCADENA      {:    RESULT = new SentenciaBreak
 transferencia_continue::=  CONTINUE:a FINCADENA      {:    RESULT = new SentenciaContinue(aleft, aright);     :}
 ;
 
+metodo ::= tipos_variable:a ID:b PAR1 parametros_metodo:p PAR2 LLAVE1 instrucciones:c LLAVE2    {:   RESULT= new Metodo(b, p, c, a, aleft, aright );   :}
+        |  tipos_variable:a ID:b PAR1 PAR2 LLAVE1 instrucciones:c LLAVE2             {:   RESULT= new Metodo(b, new LinkedList<HashMap>(), c, a, aleft, aright );   :}
+    
+;
+
+parametros_metodo ::= parametros_metodo:a COMA tipos_variable:b ID:c   {:  
+                                            RESULT = a;
+                                            var hm2= new HashMap<String, Object>();
+                                            hm2.put("id", c);
+                                            hm2.put("tipo", b);
+                                            RESULT.add(hm2);
+                                        :}
+        | tipos_variable:a ID:b                  {:  RESULT = new LinkedList<HashMap>(); 
+                                            var hm = new HashMap<String, Object>();
+                                            hm.put("id",b);
+                                            hm.put("tipo", a);
+                                            RESULT.add(hm);
+                                        :}
+;
+
+instruccion_start ::=  STARTWITH ID:a PAR1 parametros_llamada:b PAR2 FINCADENA     {:   RESULT = new StartWith(a, b, aleft, aright );   :}
+            | STARTWITH ID:a PAR1 PAR2 FINCADENA                  {:   RESULT = new StartWith(a, new LinkedList<Instruccion>(), aleft, aright );   :}
+
+;
+
+parametros_llamada ::=  parametros_llamada:a COMA expresion:e    {:  RESULT = a;
+                                                    RESULT.add(e);
+                                                :}
+            | expresion:a                       {:  RESULT = new LinkedList<Instruccion>(); 
+                                                    RESULT.add(a);
+                                                :}
+
+;
 
 tipos_variable ::= INT       {:   RESULT=new Tipo(TipoDato.ENTERO);   :}
                 | DOUBLE    {:   RESULT=new Tipo(TipoDato.DECIMAL);   :}
                 | STRING    {:   RESULT=new Tipo(TipoDato.CADENA);   :}
                 | CHAR      {:   RESULT=new Tipo(TipoDato.CARACTER);   :}
                 | BOOL      {:   RESULT=new Tipo(TipoDato.BOOLEANO);   :}
+                | VOID      {:   RESULT=new Tipo(TipoDato.VOID);   :}
 ;
 
 mutabilidad ::= CONST {: RESULT = Boolean.FALSE; :}
             | VAR {: RESULT = Boolean.TRUE; :}
 ;
 
-expresion ::=  expresionAritmetica:a {: RESULT = a; :}
-            | expresionRelacional: a {: RESULT = a; :}
-            | expresionLogica: a {: RESULT = a; :}
-            | funciones_nativas: a {: RESULT = a; :}
-            | castearExpresion: a {: RESULT =a; :}
-            | ENTERO:a      {:   RESULT = new Nativo(Integer.parseInt(a), new Tipo(TipoDato.ENTERO), aleft, aright );   :}
-            | DECIMAL:a     {:   RESULT = new Nativo(new Double(a), new Tipo(TipoDato.DECIMAL), aleft, aright );   :}
-            | CADENA:a      {:   RESULT = new Nativo(a, new Tipo(TipoDato.CADENA), aleft, aright );   :}
-            | CARACTER:a    {:   RESULT = new Nativo(a, new Tipo(TipoDato.CARACTER), aleft, aright );   :}
-            | BOOLEAN:a     {:   RESULT = new Nativo(Boolean.parseBoolean(a), new Tipo(TipoDato.BOOLEANO), aleft, aright );   :}
-            | ID:a          {:   RESULT = new AccesoVariable(a, aleft, aright);   :}
+expresion ::=  expresionAritmetica:a        {: RESULT = a; :}
+            | expresionRelacional: a        {: RESULT = a; :}
+            | expresionLogica: a            {: RESULT = a; :}
+            | funciones_nativas: a          {: RESULT = a; :}
+            | castearExpresion: a           {: RESULT =a; :}
+            | ENTERO:a                      {:   RESULT = new Nativo(Integer.parseInt(a), new Tipo(TipoDato.ENTERO), aleft, aright );   :}
+            | DECIMAL:a                     {:   RESULT = new Nativo(new Double(a), new Tipo(TipoDato.DECIMAL), aleft, aright );   :}
+            | CADENA:a                      {:   RESULT = new Nativo(a, new Tipo(TipoDato.CADENA), aleft, aright );   :}
+            | CARACTER:a                    {:   RESULT = new Nativo(a, new Tipo(TipoDato.CARACTER), aleft, aright );   :}
+            | BOOLEAN:a                     {:   RESULT = new Nativo(Boolean.parseBoolean(a), new Tipo(TipoDato.BOOLEANO), aleft, aright );   :}
+            | ID:a                          {:   RESULT = new AccesoVariable(a, aleft, aright);   :}
             | ID:a CORCHETE1 expresion:b CORCHETE2 {: RESULT = new AccesoVectorUnaDimension(a, b, aleft, aright );:}
             | ID:a CORCHETE1 expresion:b CORCHETE2 CORCHETE1 expresion:c CORCHETE2 {: RESULT = new AccesoVectorDosDimensiones(a, b, c, aleft, aright );:}
             | ID:a PUNTO REMOVE PAR1 expresion:b PAR2 {:RESULT = new RemoveLista(a, b, aleft, aright);  :}
@@ -254,38 +298,38 @@ expresion ::=  expresionAritmetica:a {: RESULT = a; :}
 
 
 expresionAritmetica ::= MENOS expresion:a             {:   RESULT = new OperacionNegacionU(a, aleft, aright);   :} %prec UMENOS
-            | expresion:a MAS expresion:b   {:   RESULT = new OperacionSuma(a, b, aleft, aright);   :}
-            | expresion:a MENOS expresion:b   {:  RESULT = new OperacionResta(a, b, aleft, aright);  :}
-            | expresion:a MULT expresion:b    {:   RESULT = new OperacionMultiplicacion(a, b, aleft, aright);   :}
-            | expresion:a DIV expresion:b     {:  RESULT = new OperacionDivision (a, b, aleft, aright);   :}
-            | expresion:a MOD expresion:b     {:  RESULT = new OperacionModulo (a, b, aleft, aright);   :}
-            | expresion:a POTENCIA expresion:b     {:  RESULT = new OperacionPotencia (a, b, aleft, aright);   :}
-            | PAR1 expresion:a PAR2           {:   RESULT = a;   :}
+            | expresion:a MAS expresion:b           {:   RESULT = new OperacionSuma(a, b, aleft, aright);   :}
+            | expresion:a MENOS expresion:b         {:  RESULT = new OperacionResta(a, b, aleft, aright);  :}
+            | expresion:a MULT expresion:b          {:   RESULT = new OperacionMultiplicacion(a, b, aleft, aright);   :}
+            | expresion:a DIV expresion:b           {:  RESULT = new OperacionDivision (a, b, aleft, aright);   :}
+            | expresion:a MOD expresion:b           {:  RESULT = new OperacionModulo (a, b, aleft, aright);   :}
+            | expresion:a POTENCIA expresion:b      {:  RESULT = new OperacionPotencia (a, b, aleft, aright);   :}
+            | PAR1 expresion:a PAR2                 {:   RESULT = a;   :}
 ;
 
 expresionRelacional ::= expresion:a DOBLEIGUAL expresion:b   {:   RESULT = new Igualacion(a, b, aleft, aright);   :} %prec DOBLEIGUAL
-                    | expresion:a DIFERENTE expresion:b   {:   RESULT = new Diferenciacion(a, b, aleft, aright);   :} %prec DIFERENTE
-                    | expresion:a MENOR expresion:b   {:   RESULT = new MenorQue(a, b, aleft, aright);   :} %prec MENOR
-                    | expresion:a MENORIGUAL expresion:b   {:   RESULT = new MenorIgualQue(a, b, aleft, aright);   :} %prec MENORIGUAL
-                    | expresion:a MAYOR expresion:b   {:   RESULT = new MayorQue(a, b, aleft, aright);   :} %prec MAYOR
-                    | expresion:a MAYORIGUAL expresion:b   {:   RESULT = new MayorIgualQue(a, b, aleft, aright);   :} %prec MAYORIGUAL
+                    | expresion:a DIFERENTE expresion:b     {:   RESULT = new Diferenciacion(a, b, aleft, aright);   :} %prec DIFERENTE
+                    | expresion:a MENOR expresion:b         {:   RESULT = new MenorQue(a, b, aleft, aright);   :} %prec MENOR
+                    | expresion:a MENORIGUAL expresion:b    {:   RESULT = new MenorIgualQue(a, b, aleft, aright);   :} %prec MENORIGUAL
+                    | expresion:a MAYOR expresion:b         {:   RESULT = new MayorQue(a, b, aleft, aright);   :} %prec MAYOR
+                    | expresion:a MAYORIGUAL expresion:b    {:   RESULT = new MayorIgualQue(a, b, aleft, aright);   :} %prec MAYORIGUAL
 
 ;
 
-expresionLogica ::= NOT expresion:a   {:   RESULT = new OperadorNot(a, aleft, aright);   :} %prec NOT
-                | expresion:a XOR expresion:b   {:   RESULT = new OperadorXor(a, b, aleft, aright);   :} %prec XOR
-                | expresion:a AND expresion:b   {:   RESULT = new OperadorAnd(a, b, aleft, aright);   :} %prec AND
-                | expresion:a OR expresion:b   {:   RESULT = new OperadorOr(a, b, aleft, aright);   :} %prec OR
+expresionLogica ::= NOT expresion:a                 {:   RESULT = new OperadorNot(a, aleft, aright);   :} %prec NOT
+                | expresion:a XOR expresion:b       {:   RESULT = new OperadorXor(a, b, aleft, aright);   :} %prec XOR
+                | expresion:a AND expresion:b       {:   RESULT = new OperadorAnd(a, b, aleft, aright);   :} %prec AND
+                | expresion:a OR expresion:b        {:   RESULT = new OperadorOr(a, b, aleft, aright);   :} %prec OR
 
 ;
 
-funciones_nativas ::= ROUND PAR1 expresion:a PAR2 {:   RESULT = new FuncionRound(a, aleft, aright);   :}
-                    | LENGTH PAR1 expresion:a PAR2 {:   RESULT = new FuncionLength(a, aleft, aright);   :}
-                    | TOSTRING PAR1 expresion:a PAR2 {:   RESULT = new FuncionToString(a, aleft, aright);   :}
-                    | ID:a PUNTO FIND PAR1 expresion:b PAR2 {:   RESULT = new FuncionFind(a, b, aleft, aright);   :}
+funciones_nativas ::= ROUND PAR1 expresion:a PAR2               {:   RESULT = new FuncionRound(a, aleft, aright);   :}
+                    | LENGTH PAR1 expresion:a PAR2              {:   RESULT = new FuncionLength(a, aleft, aright);   :}
+                    | TOSTRING PAR1 expresion:a PAR2            {:   RESULT = new FuncionToString(a, aleft, aright);   :}
+                    | ID:a PUNTO FIND PAR1 expresion:b PAR2     {:   RESULT = new FuncionFind(a, b, aleft, aright);   :}
 ;
 
-castearExpresion ::= PAR1 INT PAR2 expresion:a {:   RESULT = new Casteo(a, TipoCasteo.ENTERO, aleft, aright);   :} %prec INT
-                | PAR1 DOUBLE PAR2 expresion:a {:   RESULT = new Casteo(a, TipoCasteo.DECIMAL, aleft, aright);   :} %prec DOUBLE
-                | PAR1 CHAR PAR2 expresion:a {:   RESULT = new Casteo(a, TipoCasteo.CARACTER, aleft, aright);   :} %prec CHAR
+castearExpresion ::= PAR1 INT PAR2 expresion:a      {:   RESULT = new Casteo(a, TipoCasteo.ENTERO, aleft, aright);   :} %prec INT
+                | PAR1 DOUBLE PAR2 expresion:a      {:   RESULT = new Casteo(a, TipoCasteo.DECIMAL, aleft, aright);   :} %prec DOUBLE
+                | PAR1 CHAR PAR2 expresion:a        {:   RESULT = new Casteo(a, TipoCasteo.CARACTER, aleft, aright);   :} %prec CHAR
 ;

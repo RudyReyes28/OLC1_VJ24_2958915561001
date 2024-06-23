@@ -105,6 +105,8 @@ ROUND = "round"
 LENGTH ="length"
 TOSTRING = "tostring"
 FIND = "find"
+VOID = "void"
+STARTWITH = "start_with"
 %%
 <YYINITIAL> {IMPRIMIR}  {return new Symbol(sym.IMPRIMIR, yyline, yycolumn,yytext());}
 <YYINITIAL> {CONST}     {return new Symbol(sym.CONST, yyline, yycolumn,yytext());}
@@ -132,6 +134,8 @@ FIND = "find"
 <YYINITIAL> {LENGTH}        {return new Symbol(sym.LENGTH, yyline, yycolumn,yytext());}
 <YYINITIAL> {TOSTRING}        {return new Symbol(sym.TOSTRING, yyline, yycolumn,yytext());}
 <YYINITIAL> {FIND}        {return new Symbol(sym.FIND, yyline, yycolumn,yytext());}
+<YYINITIAL> {VOID}        {return new Symbol(sym.VOID, yyline, yycolumn,yytext());}
+<YYINITIAL> {STARTWITH}        {return new Symbol(sym.STARTWITH, yyline, yycolumn,yytext());}
 
 
 <YYINITIAL> {DECIMAL}   {return new Symbol(sym.DECIMAL, yyline, yycolumn,yytext());}

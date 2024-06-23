@@ -6,6 +6,7 @@ package com.rudyreyes.javacraft.modelo.simbolo;
 
 import com.rudyreyes.javacraft.modelo.abstracto.Instruccion;
 import com.rudyreyes.javacraft.modelo.errores.Errores;
+import com.rudyreyes.javacraft.modelo.instrucciones.metodos.Metodo;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,6 +22,7 @@ public class Arbol {
     private TablaSimbolos tablaGlobal;
     public  LinkedList<Errores> errores;
     public List<TablaSimbolos> tablasEntornos;
+    private LinkedList<Instruccion> funciones;
 
     public Arbol(LinkedList<Instruccion> instrucciones) {
         this.instrucciones = instrucciones;
@@ -28,6 +30,7 @@ public class Arbol {
         this.tablaGlobal = new TablaSimbolos();
         this.errores = new LinkedList<>();
         this.tablasEntornos = new ArrayList<>();
+        this.funciones = new LinkedList<>();
     }
 
     public LinkedList<Instruccion> getInstrucciones() {
@@ -99,7 +102,7 @@ public class Arbol {
         this.consola += secuenciasEscape(valor) +"\n";
     }
     
-        private String secuenciasEscape(String valor) {
+    private String secuenciasEscape(String valor) {
         StringBuilder resultado = new StringBuilder();
         for (int i = 0; i < valor.length(); i++) {
             char c = valor.charAt(i);
@@ -141,5 +144,27 @@ public class Arbol {
         return resultado.toString();
     }
 
-    
+     public LinkedList<Instruccion> getFunciones() {
+        return funciones;
+    }
+
+    public void setFunciones(LinkedList<Instruccion> funciones) {
+        this.funciones = funciones;
+    }
+
+    public void addFunciones(Instruccion funcion) {    
+        this.funciones.add(funcion);
+    }
+
+    public Instruccion getFuncion(String id) {
+        for (var i : this.funciones) {
+            if (i instanceof Metodo) {
+                Metodo metodo = (Metodo) i;
+                if (metodo.id.equalsIgnoreCase(id)) {
+                    return metodo;
+                }
+            }
+        }
+        return null;
+    }
 }

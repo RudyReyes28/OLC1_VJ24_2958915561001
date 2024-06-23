@@ -24,7 +24,7 @@ public interface sym {
   public static final int XOR = 34;
   public static final int DIFERENTE = 28;
   public static final int DOUBLE = 39;
-  public static final int CONTINUE = 61;
+  public static final int CONTINUE = 63;
   public static final int INT = 37;
   public static final int FOR = 24;
   public static final int MATCH = 21;
@@ -34,7 +34,7 @@ public interface sym {
   public static final int MENORIGUAL = 30;
   public static final int APPEND = 52;
   public static final int IGUAL = 43;
-  public static final int CARACTER = 59;
+  public static final int CARACTER = 61;
   public static final int CORCHETE2 = 45;
   public static final int OR = 35;
   public static final int CORCHETE1 = 44;
@@ -44,9 +44,10 @@ public interface sym {
   public static final int IF = 19;
   public static final int ID = 5;
   public static final int MAYORIGUAL = 32;
-  public static final int BOOLEAN = 58;
+  public static final int BOOLEAN = 60;
   public static final int EOF = 0;
   public static final int DECIMAL = 4;
+  public static final int STARTWITH = 58;
   public static final int NEW = 50;
   public static final int error = 1;
   public static final int COMA = 46;
@@ -54,8 +55,9 @@ public interface sym {
   public static final int MENOS = 11;
   public static final int MENOR = 29;
   public static final int MOD = 15;
-  public static final int BREAK = 60;
+  public static final int BREAK = 62;
   public static final int TOSTRING = 56;
+  public static final int VOID = 59;
   public static final int MAYOR = 31;
   public static final int POTENCIA = 16;
   public static final int FLECHA = 22;
@@ -129,6 +131,8 @@ public interface sym {
   "LENGTH",
   "TOSTRING",
   "FIND",
+  "STARTWITH",
+  "VOID",
   "BOOLEAN",
   "CARACTER",
   "BREAK",

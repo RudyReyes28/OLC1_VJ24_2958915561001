@@ -8,6 +8,13 @@ import com.rudyreyes.javacraft.controlador.analisis.parser;
 import com.rudyreyes.javacraft.controlador.analisis.scanner;
 import com.rudyreyes.javacraft.modelo.abstracto.Instruccion;
 import com.rudyreyes.javacraft.modelo.errores.Errores;
+import com.rudyreyes.javacraft.modelo.instrucciones.AsignacionVariable;
+import com.rudyreyes.javacraft.modelo.instrucciones.DeclaracionVariable;
+import com.rudyreyes.javacraft.modelo.instrucciones.listas.DeclaracionLista;
+import com.rudyreyes.javacraft.modelo.instrucciones.metodos.Metodo;
+import com.rudyreyes.javacraft.modelo.instrucciones.metodos.StartWith;
+import com.rudyreyes.javacraft.modelo.instrucciones.vectores.VectorDosDimensiones;
+import com.rudyreyes.javacraft.modelo.instrucciones.vectores.VectorUnaDimension;
 import com.rudyreyes.javacraft.modelo.simbolo.Arbol;
 import com.rudyreyes.javacraft.modelo.simbolo.EntornoSimbolos;
 import com.rudyreyes.javacraft.modelo.simbolo.TablaSimbolos;
@@ -271,8 +278,54 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                     
                     lista.addAll(s.listaErrores);
                     lista.addAll(p.listaErrores);
-            
-            
+                 
+                    //almacenar funciones, metodos o structs
+                   
+                    for (var a : ast.getInstrucciones()) {
+                        if (a == null) {
+                            continue;
+                        }
+
+                        if (a instanceof Metodo) {
+                            ast.addFunciones(a);
+                        }
+                    }
+                    
+                    //declaraciones o asignaciones globales
+                    for (var a : ast.getInstrucciones()) {
+                        if (a == null) {
+                            continue;
+                        }
+
+                        if (a instanceof DeclaracionVariable ) {
+                            var res = a.interpretar(ast, tabla);
+                            if (res instanceof Errores errores) {
+                                lista.add(errores);
+                            }
+                        }
+
+                    }
+              
+                    //execute -> start_with
+                    StartWith inicio = null;
+                    for (var a : ast.getInstrucciones()) {
+                        if (a == null) {
+                            continue;
+                        }
+                        if (a instanceof StartWith) {
+                            inicio = (StartWith) a;
+                            break;
+                        }
+                    }
+
+                    var resultadoExecute = inicio.interpretar(ast, tabla);
+                    
+                    if (resultadoExecute instanceof Errores) {
+                        lista.add((Errores)resultadoExecute);
+                    }
+                    
+
+/*
                     for (var a : ast.getInstrucciones()) {
                         if (a == null) {
                             continue;
@@ -283,7 +336,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                             
                             lista.add((Errores) res);
                         }
-                    }
+                    }*/
                     areaConsola.setText(ast.getConsola());
                     
                     for (var i : lista) {
