@@ -28,6 +28,10 @@ public class FuncionLength extends Instruccion{
     public Object interpretar(Arbol arbol, TablaSimbolos tabla) {
         var resultado = expresion.interpretar(arbol, tabla);
         
+        if(resultado instanceof Errores){
+            return resultado;
+        }
+        
         if(resultado instanceof Object []){
             return ((Object[]) resultado).length;
         }

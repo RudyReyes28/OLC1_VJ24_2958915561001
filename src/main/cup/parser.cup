@@ -21,6 +21,7 @@ import com.rudyreyes.javacraft.modelo.expresiones.logicas.*;
 import com.rudyreyes.javacraft.modelo.expresiones.casteos.*;
 import com.rudyreyes.javacraft.modelo.expresiones.variables.*;
 import com.rudyreyes.javacraft.modelo.expresiones.accesovector.*;
+import com.rudyreyes.javacraft.modelo.expresiones.funcionesNativas.*;
 import com.rudyreyes.javacraft.modelo.errores.*;
 
 
@@ -62,6 +63,7 @@ terminal NOT, XOR, OR, AND;
 terminal INT, CHAR, DOUBLE, STRING, BOOL;
 terminal DOSPUNTOS, IGUAL, CORCHETE1, CORCHETE2, COMA;
 terminal CONST, VAR, LIST, NEW, PUNTO, APPEND, REMOVE;
+terminal ROUND, LENGTH, TOSTRING, FIND;
 terminal String BOOLEAN, CARACTER, BREAK, CONTINUE;
 
 //no terminales
@@ -75,6 +77,7 @@ nonterminal Instruccion ciclo_for, ciclo_while, ciclo_dowhile, actualizar_for;
 nonterminal Instruccion transferencia_break, transferencia_continue;
 nonterminal Instruccion declaracion_vectores, asignacion_vector;
 nonterminal Instruccion declaracion_lista, append_lista;
+nonterminal Instruccion funciones_nativas;
 nonterminal Tipo tipos_variable;
 nonterminal Boolean  mutabilidad;
 nonterminal CasoMatch caso_match;
@@ -236,6 +239,7 @@ mutabilidad ::= CONST {: RESULT = Boolean.FALSE; :}
 expresion ::=  expresionAritmetica:a {: RESULT = a; :}
             | expresionRelacional: a {: RESULT = a; :}
             | expresionLogica: a {: RESULT = a; :}
+            | funciones_nativas: a {: RESULT = a; :}
             | castearExpresion: a {: RESULT =a; :}
             | ENTERO:a      {:   RESULT = new Nativo(Integer.parseInt(a), new Tipo(TipoDato.ENTERO), aleft, aright );   :}
             | DECIMAL:a     {:   RESULT = new Nativo(new Double(a), new Tipo(TipoDato.DECIMAL), aleft, aright );   :}
@@ -273,6 +277,12 @@ expresionLogica ::= NOT expresion:a   {:   RESULT = new OperadorNot(a, aleft, ar
                 | expresion:a AND expresion:b   {:   RESULT = new OperadorAnd(a, b, aleft, aright);   :} %prec AND
                 | expresion:a OR expresion:b   {:   RESULT = new OperadorOr(a, b, aleft, aright);   :} %prec OR
 
+;
+
+funciones_nativas ::= ROUND PAR1 expresion:a PAR2 {:   RESULT = new FuncionRound(a, aleft, aright);   :}
+                    | LENGTH PAR1 expresion:a PAR2 {:   RESULT = new FuncionLength(a, aleft, aright);   :}
+                    | TOSTRING PAR1 expresion:a PAR2 {:   RESULT = new FuncionToString(a, aleft, aright);   :}
+                    | ID:a PUNTO FIND PAR1 expresion:b PAR2 {:   RESULT = new FuncionFind(a, b, aleft, aright);   :}
 ;
 
 castearExpresion ::= PAR1 INT PAR2 expresion:a {:   RESULT = new Casteo(a, TipoCasteo.ENTERO, aleft, aright);   :} %prec INT

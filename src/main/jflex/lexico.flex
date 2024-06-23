@@ -101,6 +101,10 @@ LIST = "list"
 NEW = "new"
 APPEND = "append"
 REMOVE = "remove"
+ROUND = "round"
+LENGTH ="length"
+TOSTRING = "tostring"
+FIND = "find"
 %%
 <YYINITIAL> {IMPRIMIR}  {return new Symbol(sym.IMPRIMIR, yyline, yycolumn,yytext());}
 <YYINITIAL> {CONST}     {return new Symbol(sym.CONST, yyline, yycolumn,yytext());}
@@ -124,6 +128,11 @@ REMOVE = "remove"
 <YYINITIAL> {NEW}        {return new Symbol(sym.NEW, yyline, yycolumn,yytext());}
 <YYINITIAL> {APPEND}        {return new Symbol(sym.APPEND, yyline, yycolumn,yytext());}
 <YYINITIAL> {REMOVE}        {return new Symbol(sym.REMOVE, yyline, yycolumn,yytext());}
+<YYINITIAL> {ROUND}        {return new Symbol(sym.ROUND, yyline, yycolumn,yytext());}
+<YYINITIAL> {LENGTH}        {return new Symbol(sym.LENGTH, yyline, yycolumn,yytext());}
+<YYINITIAL> {TOSTRING}        {return new Symbol(sym.TOSTRING, yyline, yycolumn,yytext());}
+<YYINITIAL> {FIND}        {return new Symbol(sym.FIND, yyline, yycolumn,yytext());}
+
 
 <YYINITIAL> {DECIMAL}   {return new Symbol(sym.DECIMAL, yyline, yycolumn,yytext());}
 <YYINITIAL> {ENTERO}    {return new Symbol(sym.ENTERO, yyline, yycolumn,yytext());}
