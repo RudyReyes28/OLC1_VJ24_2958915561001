@@ -25,7 +25,7 @@ public class FuncionReturn extends Instruccion{
     }
 
     public FuncionReturn(int linea, int columna) {
-        super(new Tipo(TipoDato.ENTERO), linea, columna);
+        super(new Tipo(TipoDato.VOID), linea, columna);
         this.instruccion = null;
     }
     
@@ -33,6 +33,10 @@ public class FuncionReturn extends Instruccion{
 
     @Override
     public Object interpretar(Arbol arbol, TablaSimbolos tabla) {
+        if(this.instruccion == null){
+             return new FuncionReturn( new Nativo(null, new Tipo(TipoDato.VOID), linea, columna), linea, columna);
+
+        }
         var resultado = this.instruccion.interpretar(arbol, tabla);
         
         if(resultado instanceof Errores){

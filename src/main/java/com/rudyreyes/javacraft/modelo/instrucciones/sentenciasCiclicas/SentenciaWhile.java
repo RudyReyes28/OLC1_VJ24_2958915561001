@@ -6,6 +6,7 @@ package com.rudyreyes.javacraft.modelo.instrucciones.sentenciasCiclicas;
 
 import com.rudyreyes.javacraft.modelo.abstracto.Instruccion;
 import com.rudyreyes.javacraft.modelo.errores.Errores;
+import com.rudyreyes.javacraft.modelo.instrucciones.metodos.FuncionReturn;
 import com.rudyreyes.javacraft.modelo.instrucciones.sentenciasTransferencia.SentenciaBreak;
 import com.rudyreyes.javacraft.modelo.instrucciones.sentenciasTransferencia.SentenciaContinue;
 import com.rudyreyes.javacraft.modelo.simbolo.Arbol;
@@ -60,6 +61,14 @@ public class SentenciaWhile extends Instruccion{
                     break;
                 }
                 
+                if (i instanceof FuncionReturn) {
+                    var res = i.interpretar(arbol, newTabla);
+                    if (res instanceof Errores) {
+                        return res;
+                    }
+                    return res;
+                }
+                
                 if(i == null){
                     continue;
                 }
@@ -67,6 +76,13 @@ public class SentenciaWhile extends Instruccion{
                 var resIns = i.interpretar(arbol, newTabla);
                 if (resIns instanceof SentenciaBreak) {
                     return null;
+                }
+                if (resIns instanceof SentenciaContinue) {
+                    break;
+                }
+                
+                if(resIns instanceof FuncionReturn){
+                    return resIns;
                 }
                 if (resIns instanceof Errores) {
                     return resIns;

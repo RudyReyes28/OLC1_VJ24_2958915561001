@@ -6,6 +6,7 @@ package com.rudyreyes.javacraft.modelo.instrucciones.sentenciaControl;
 
 import com.rudyreyes.javacraft.modelo.abstracto.Instruccion;
 import com.rudyreyes.javacraft.modelo.errores.Errores;
+import com.rudyreyes.javacraft.modelo.instrucciones.metodos.FuncionReturn;
 import com.rudyreyes.javacraft.modelo.simbolo.Arbol;
 import com.rudyreyes.javacraft.modelo.simbolo.TablaSimbolos;
 import com.rudyreyes.javacraft.modelo.simbolo.Tipo;
@@ -48,8 +49,18 @@ public class SentenciaMatch extends Instruccion{
                 if (this.condicion.tipo.getTipo() == c.getCaso().tipo.getTipo()) {
                     if (cond.equals(condCaso)) {
                         for (var i : c.getInstrucciones()) {
+                            if (i instanceof FuncionReturn) {
+                                var res = i.interpretar(arbol, newTabla);
+                                if (res instanceof Errores) {
+                                    return res;
+                                }
+                                return res;
+                            }
                             var resultado = i.interpretar(arbol, newTabla);
                             
+                            if (resultado instanceof FuncionReturn) {
+                                return resultado;
+                            }
                             if (resultado instanceof Errores) {
                                 return resultado;
                             }
@@ -62,7 +73,17 @@ public class SentenciaMatch extends Instruccion{
         } else {
             if (casoDefault != null) {
                 for (var i : casoDefault) {
+                    if (i instanceof FuncionReturn) {
+                        var res = i.interpretar(arbol, newTabla);
+                        if (res instanceof Errores) {
+                            return res;
+                        }
+                        return res;
+                    }
                     var resultado = i.interpretar(arbol, newTabla);
+                    if (resultado instanceof FuncionReturn) {
+                        return resultado;
+                    }
                     if (resultado instanceof Errores) {
                             return resultado;
                     }
@@ -74,7 +95,17 @@ public class SentenciaMatch extends Instruccion{
         if (ejecutarDefault) {
             if (casoDefault != null) {
                 for (var i : casoDefault) {
+                    if (i instanceof FuncionReturn) {
+                        var res = i.interpretar(arbol, newTabla);
+                        if (res instanceof Errores) {
+                            return res;
+                        }
+                        return res;
+                    }
                     var resultado = i.interpretar(arbol, newTabla);
+                    if (resultado instanceof FuncionReturn) {
+                        return resultado;
+                    }
                     if (resultado instanceof Errores) {
                             return resultado;
                     }

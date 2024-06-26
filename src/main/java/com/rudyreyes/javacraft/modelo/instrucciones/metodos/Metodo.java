@@ -51,6 +51,10 @@ public class Metodo extends Instruccion{
                 return resultado;
             }
             
+            if(resultado instanceof FuncionReturn){
+                    return resultado;
+            }
+            
             // return;
         }
         return null;
