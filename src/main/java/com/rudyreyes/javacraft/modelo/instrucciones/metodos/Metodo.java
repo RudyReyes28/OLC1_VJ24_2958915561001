@@ -31,11 +31,26 @@ public class Metodo extends Instruccion{
     @Override
     public Object interpretar(Arbol arbol, TablaSimbolos tabla) {
         for (var i : this.instrucciones) {
+            if(i instanceof FuncionReturn){
+                
+                var res = i.interpretar(arbol, tabla);
+                if (res instanceof Errores) {
+                    return res;
+                }
+                if (tipo.getTipo() == i.tipo.getTipo()) {
+                    return res;
+                } else {
+                    return new Errores("SEMANTICO", "El tipo de retorno no coincide con el tipo del metodo", linea, columna);
+                }
+
+
+                
+            }
             var resultado = i.interpretar(arbol, tabla);
             if(resultado instanceof Errores){
                 return resultado;
             }
-            //resultado instancia de errores
+            
             // return;
         }
         return null;

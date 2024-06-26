@@ -66,7 +66,7 @@ terminal INT, CHAR, DOUBLE, STRING, BOOL;
 terminal DOSPUNTOS, IGUAL, CORCHETE1, CORCHETE2, COMA;
 terminal CONST, VAR, LIST, NEW, PUNTO, APPEND, REMOVE;
 terminal ROUND, LENGTH, TOSTRING, FIND, STARTWITH, VOID;
-terminal String BOOLEAN, CARACTER, BREAK, CONTINUE;
+terminal String BOOLEAN, CARACTER, BREAK, CONTINUE, RETURN;
 
 //no terminales
 nonterminal LinkedList<Instruccion> inicio, instrucciones;
@@ -92,6 +92,7 @@ nonterminal Instruccion metodo;
 nonterminal LinkedList<HashMap> parametros_metodo;
 nonterminal Instruccion instruccion_start;
 nonterminal LinkedList<Instruccion> parametros_llamada;
+nonterminal Instruccion llamada_metodo, llamada_funcion, funcion_return;
 
 precedence left OR;
 precedence left AND;
@@ -130,6 +131,8 @@ instruccion ::= println:a                   {: RESULT= a; :}
              | transferencia_continue:a     {: RESULT= a; :}
              | metodo:a                     {: RESULT= a; :}
              | instruccion_start:a          {: RESULT= a; :}
+             | llamada_metodo:a             {: RESULT= a; :}
+             | funcion_return:a             {: RESULT= a; :}
              | error FINCADENA
              | error 
 ;
@@ -259,6 +262,15 @@ instruccion_start ::=  STARTWITH ID:a PAR1 parametros_llamada:b PAR2 FINCADENA  
 
 ;
 
+llamada_metodo ::= ID:a PAR1 parametros_llamada:b PAR2 FINCADENA    {: RESULT= new LlamadaMetodo(a,b, aleft, aright); :}
+                | ID:a PAR1 PAR2 FINCADENA                          {:RESULT= new LlamadaMetodo(a, new LinkedList<Instruccion>(), aleft, aright); :}
+;
+
+llamada_funcion ::= ID:a PAR1 parametros_llamada:b PAR2     {: RESULT= new LlamadaMetodo(a,b, aleft, aright); :}
+                | ID:a PAR1 PAR2                           {:RESULT= new LlamadaMetodo(a, new LinkedList<Instruccion>(), aleft, aright); :}
+;
+
+
 parametros_llamada ::=  parametros_llamada:a COMA expresion:e    {:  RESULT = a;
                                                     RESULT.add(e);
                                                 :}
@@ -267,6 +279,11 @@ parametros_llamada ::=  parametros_llamada:a COMA expresion:e    {:  RESULT = a;
                                                 :}
 
 ;
+
+funcion_return ::= RETURN expresion:a FINCADENA {:RESULT = new FuncionReturn(a, aleft, aright); :}
+                | RETURN:a FINCADENA {:RESULT = new FuncionReturn(aleft, aright); :}
+;
+
 
 tipos_variable ::= INT       {:   RESULT=new Tipo(TipoDato.ENTERO);   :}
                 | DOUBLE    {:   RESULT=new Tipo(TipoDato.DECIMAL);   :}
@@ -285,6 +302,7 @@ expresion ::=  expresionAritmetica:a        {: RESULT = a; :}
             | expresionLogica: a            {: RESULT = a; :}
             | funciones_nativas: a          {: RESULT = a; :}
             | castearExpresion: a           {: RESULT =a; :}
+            | llamada_funcion :a            {: RESULT= a; :}
             | ENTERO:a                      {:   RESULT = new Nativo(Integer.parseInt(a), new Tipo(TipoDato.ENTERO), aleft, aright );   :}
             | DECIMAL:a                     {:   RESULT = new Nativo(new Double(a), new Tipo(TipoDato.DECIMAL), aleft, aright );   :}
             | CADENA:a                      {:   RESULT = new Nativo(a, new Tipo(TipoDato.CADENA), aleft, aright );   :}

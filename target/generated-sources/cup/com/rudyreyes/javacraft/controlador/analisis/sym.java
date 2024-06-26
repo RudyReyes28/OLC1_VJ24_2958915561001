@@ -47,6 +47,7 @@ public interface sym {
   public static final int BOOLEAN = 60;
   public static final int EOF = 0;
   public static final int DECIMAL = 4;
+  public static final int RETURN = 64;
   public static final int STARTWITH = 58;
   public static final int NEW = 50;
   public static final int error = 1;
@@ -136,7 +137,8 @@ public interface sym {
   "BOOLEAN",
   "CARACTER",
   "BREAK",
-  "CONTINUE"
+  "CONTINUE",
+  "RETURN"
   };
 }
 
