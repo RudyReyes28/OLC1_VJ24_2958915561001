@@ -7,6 +7,7 @@ package com.rudyreyes.javacraft.modelo.simbolo;
 import com.rudyreyes.javacraft.modelo.abstracto.Instruccion;
 import com.rudyreyes.javacraft.modelo.errores.Errores;
 import com.rudyreyes.javacraft.modelo.instrucciones.metodos.Metodo;
+import com.rudyreyes.javacraft.modelo.instrucciones.structs.DeclaracionStruct;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,6 +24,7 @@ public class Arbol {
     public  LinkedList<Errores> errores;
     public List<TablaSimbolos> tablasEntornos;
     private LinkedList<Instruccion> funciones;
+    private LinkedList<Instruccion> structs;
 
     public Arbol(LinkedList<Instruccion> instrucciones) {
         this.instrucciones = instrucciones;
@@ -31,6 +33,7 @@ public class Arbol {
         this.errores = new LinkedList<>();
         this.tablasEntornos = new ArrayList<>();
         this.funciones = new LinkedList<>();
+        this.structs = new LinkedList<>();
     }
 
     public LinkedList<Instruccion> getInstrucciones() {
@@ -151,9 +154,17 @@ public class Arbol {
     public void setFunciones(LinkedList<Instruccion> funciones) {
         this.funciones = funciones;
     }
+    
+    public void setStructs(LinkedList<Instruccion> structs){
+        this.structs = structs;
+    }
 
     public void addFunciones(Instruccion funcion) {    
         this.funciones.add(funcion);
+    }
+    
+    public void addStructs(Instruccion struct) {    
+        this.structs.add(struct);
     }
 
     public Instruccion getFuncion(String id) {
@@ -165,6 +176,19 @@ public class Arbol {
                 }
             }
         }
+        return null;
+    }
+    
+    public Instruccion getStruct(String id){
+        for (var i : this.structs) {
+            if (i instanceof DeclaracionStruct) {
+                DeclaracionStruct struct = (DeclaracionStruct) i;
+                if (struct.id.equalsIgnoreCase(id)) {
+                    return struct;
+                }
+            }
+        }
+        
         return null;
     }
 }

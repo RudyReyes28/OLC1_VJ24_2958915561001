@@ -13,6 +13,8 @@ import com.rudyreyes.javacraft.modelo.instrucciones.DeclaracionVariable;
 import com.rudyreyes.javacraft.modelo.instrucciones.listas.DeclaracionLista;
 import com.rudyreyes.javacraft.modelo.instrucciones.metodos.Metodo;
 import com.rudyreyes.javacraft.modelo.instrucciones.metodos.StartWith;
+import com.rudyreyes.javacraft.modelo.instrucciones.structs.DeclaracionStruct;
+import com.rudyreyes.javacraft.modelo.instrucciones.vectores.AsignacionVectorUnaDimension;
 import com.rudyreyes.javacraft.modelo.instrucciones.vectores.VectorDosDimensiones;
 import com.rudyreyes.javacraft.modelo.instrucciones.vectores.VectorUnaDimension;
 import com.rudyreyes.javacraft.modelo.simbolo.Arbol;
@@ -29,7 +31,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JFileChooser;
@@ -273,6 +277,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                     var tabla = new TablaSimbolos();
                     tabla.setNombre("GLOBAL");
                     ast.setConsola("");
+                    ast.setTablaGlobal(tabla);
                     
                     lista = new LinkedList<>();
                     
@@ -289,6 +294,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                         if (a instanceof Metodo) {
                             ast.addFunciones(a);
                         }
+                        if (a instanceof DeclaracionStruct) {
+                            ast.addStructs(a);
+                        }
+                        
+                        
                     }
                     
                     //declaraciones o asignaciones globales
@@ -298,9 +308,19 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                         }
 
                         if (a instanceof DeclaracionVariable ) {
+                            
                             var res = a.interpretar(ast, tabla);
-                            if (res instanceof Errores errores) {
-                                lista.add(errores);
+                            
+                            if (res instanceof Errores ) {
+                                lista.add((Errores)res);
+                            }
+                        }
+                        
+                        if(a instanceof VectorUnaDimension){
+                            var res = a.interpretar(ast, tabla);
+                            
+                            if (res instanceof  Errores) {
+                                lista.add((Errores)res);
                             }
                         }
 
@@ -350,9 +370,14 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 
                 
             } catch (Exception ex) {
-                areaConsola.setText("Algo salio mal: "+ex);
-                //System.out.println("Algo salio mal");
-                //System.out.println(ex);
+                //areaConsola.setText("Algo salio mal: "+ex);
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                ex.printStackTrace(pw);
+                String stackTrace = sw.toString();
+
+                // Muestra el mensaje y el stack trace en el área de consola
+                areaConsola.setText("Algo salió mal: " + ex.getMessage() + "\n" + stackTrace);
             }
         } else {
             areaConsola.setText("No hay pestañas abiertas");

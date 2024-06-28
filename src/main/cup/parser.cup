@@ -15,6 +15,7 @@ import com.rudyreyes.javacraft.modelo.instrucciones.sentenciasCiclicas.*;
 import com.rudyreyes.javacraft.modelo.instrucciones.vectores.*;
 import com.rudyreyes.javacraft.modelo.instrucciones.listas.*;
 import com.rudyreyes.javacraft.modelo.instrucciones.metodos.*;
+import com.rudyreyes.javacraft.modelo.instrucciones.structs.*;
 //expresiones
 import com.rudyreyes.javacraft.modelo.expresiones.Nativo;
 import com.rudyreyes.javacraft.modelo.expresiones.aritmeticas.*;
@@ -24,6 +25,7 @@ import com.rudyreyes.javacraft.modelo.expresiones.casteos.*;
 import com.rudyreyes.javacraft.modelo.expresiones.variables.*;
 import com.rudyreyes.javacraft.modelo.expresiones.accesovector.*;
 import com.rudyreyes.javacraft.modelo.expresiones.funcionesNativas.*;
+import com.rudyreyes.javacraft.modelo.expresiones.accesostruct.*;
 import com.rudyreyes.javacraft.modelo.errores.*;
 
 
@@ -65,7 +67,7 @@ terminal NOT, XOR, OR, AND;
 terminal INT, CHAR, DOUBLE, STRING, BOOL;
 terminal DOSPUNTOS, IGUAL, CORCHETE1, CORCHETE2, COMA;
 terminal CONST, VAR, LIST, NEW, PUNTO, APPEND, REMOVE;
-terminal ROUND, LENGTH, TOSTRING, FIND, STARTWITH, VOID;
+terminal ROUND, LENGTH, TOSTRING, FIND, STARTWITH, VOID, STRUCT;
 terminal String BOOLEAN, CARACTER, BREAK, CONTINUE, RETURN;
 
 //no terminales
@@ -88,11 +90,13 @@ nonterminal LinkedList<Instruccion> lista_vector_u;
 nonterminal LinkedList<LinkedList<Instruccion>> lista_vector_d;
 
 //METODOS Y FUNCIONES
-nonterminal Instruccion metodo;
-nonterminal LinkedList<HashMap> parametros_metodo;
+nonterminal Instruccion metodo, declaracion_struct;
+nonterminal LinkedList<HashMap> parametros_metodo, lista_struct;
 nonterminal Instruccion instruccion_start;
-nonterminal LinkedList<Instruccion> parametros_llamada;
-nonterminal Instruccion llamada_metodo, llamada_funcion, funcion_return;
+nonterminal LinkedList<Instruccion> parametros_llamada, parametros_struct;
+nonterminal Instruccion llamada_metodo, llamada_funcion, funcion_return, instancia_struct;
+nonterminal Instruccion acceso_struct;
+nonterminal Object tipo_struct;
 
 precedence left OR;
 precedence left AND;
@@ -132,6 +136,8 @@ instruccion ::= println:a                   {: RESULT= a; :}
              | metodo:a                     {: RESULT= a; :}
              | instruccion_start:a          {: RESULT= a; :}
              | llamada_metodo:a             {: RESULT= a; :}
+             | declaracion_struct:a         {: RESULT= a; :}
+             | instancia_struct:a           {: RESULT= a; :}
              | funcion_return:a             {: RESULT= a; :}
              | error FINCADENA
              | error 
@@ -257,6 +263,45 @@ parametros_metodo ::= parametros_metodo:a COMA tipos_variable:b ID:c   {:
                                         :}
 ;
 
+declaracion_struct ::= STRUCT LLAVE1 lista_struct:b LLAVE2 ID:a FINCADENA {:RESULT = new DeclaracionStruct(a,b,  aleft, aright); :}
+;
+
+lista_struct ::= lista_struct:a ID:b DOSPUNTOS tipo_struct:c FINCADENA {:  
+                                            RESULT = a;
+                                            var hm2= new HashMap<String, Object>();
+                                            hm2.put("id", b);
+                                            hm2.put("tipo", c);
+                                            hm2.put ("valor", null);
+                                            RESULT.add(hm2);
+                                        :}
+                |ID:a DOSPUNTOS tipo_struct:b FINCADENA {:  RESULT = new LinkedList<HashMap>(); 
+                                            var hm = new HashMap<String, Object>();
+                                            hm.put("id",a);
+                                            hm.put("tipo", b);
+                                            hm.put ("valor", null);
+                                            RESULT.add(hm);
+                                        :}
+;
+
+tipo_struct ::= tipos_variable:a {:RESULT = a; :}
+            | ID:a {:RESULT = a; :}
+
+;
+
+instancia_struct ::=  mutabilidad:a ID:b DOSPUNTOS ID:c IGUAL LLAVE1 parametros_struct:d LLAVE2 FINCADENA 
+                        {: RESULT = new InstanciaStruct(a,b,c,d, aleft, aright);:}
+
+;
+
+parametros_struct ::= parametros_struct:a COMA ID:b DOSPUNTOS expresion:c {:  RESULT = a;
+                                                    RESULT.add(c);
+                                                :}
+                    | ID:b DOSPUNTOS expresion:c {:  RESULT = new LinkedList<Instruccion>(); 
+                                                    RESULT.add(c);
+                                                :}
+
+;
+
 instruccion_start ::=  STARTWITH ID:a PAR1 parametros_llamada:b PAR2 FINCADENA     {:   RESULT = new StartWith(a, b, aleft, aright );   :}
             | STARTWITH ID:a PAR1 PAR2 FINCADENA                  {:   RESULT = new StartWith(a, new LinkedList<Instruccion>(), aleft, aright );   :}
 
@@ -303,6 +348,7 @@ expresion ::=  expresionAritmetica:a        {: RESULT = a; :}
             | funciones_nativas: a          {: RESULT = a; :}
             | castearExpresion: a           {: RESULT =a; :}
             | llamada_funcion :a            {: RESULT= a; :}
+            | acceso_struct:a               {: RESULT= a; :}
             | ENTERO:a                      {:   RESULT = new Nativo(Integer.parseInt(a), new Tipo(TipoDato.ENTERO), aleft, aright );   :}
             | DECIMAL:a                     {:   RESULT = new Nativo(new Double(a), new Tipo(TipoDato.DECIMAL), aleft, aright );   :}
             | CADENA:a                      {:   RESULT = new Nativo(a, new Tipo(TipoDato.CADENA), aleft, aright );   :}
@@ -350,4 +396,8 @@ funciones_nativas ::= ROUND PAR1 expresion:a PAR2               {:   RESULT = ne
 castearExpresion ::= PAR1 INT PAR2 expresion:a      {:   RESULT = new Casteo(a, TipoCasteo.ENTERO, aleft, aright);   :} %prec INT
                 | PAR1 DOUBLE PAR2 expresion:a      {:   RESULT = new Casteo(a, TipoCasteo.DECIMAL, aleft, aright);   :} %prec DOUBLE
                 | PAR1 CHAR PAR2 expresion:a        {:   RESULT = new Casteo(a, TipoCasteo.CARACTER, aleft, aright);   :} %prec CHAR
+;
+
+acceso_struct ::= ID:a PUNTO ID:b {: RESULT = new AccesoStructBasico(a, b, aleft, aright);   :}
+
 ;
