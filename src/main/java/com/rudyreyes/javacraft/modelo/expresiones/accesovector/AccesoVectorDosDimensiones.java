@@ -79,6 +79,11 @@ public class AccesoVectorDosDimensiones extends Instruccion{
                     this.linea, this.columna);
 
     }
+
+    @Override
+    public String generarast(Arbol arbol, String anterior) {
+        return "";
+    }
     
     
     

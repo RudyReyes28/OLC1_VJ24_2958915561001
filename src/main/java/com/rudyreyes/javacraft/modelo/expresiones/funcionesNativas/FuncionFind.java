@@ -87,6 +87,9 @@ public class FuncionFind extends Instruccion{
 
     }
     
-    
+    @Override
+    public String generarast(Arbol arbol, String anterior) {
+        return "";
+    }
     
 }

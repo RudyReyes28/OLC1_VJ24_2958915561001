@@ -71,5 +71,9 @@ public class StartWith extends Instruccion{
         
     }
     
+    @Override
+    public String generarast(Arbol arbol, String anterior) {
+        return "";
+    }
     
 }

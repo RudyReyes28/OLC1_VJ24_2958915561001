@@ -43,6 +43,9 @@ public class FuncionRound extends Instruccion{
          return new Errores("SEMANTICO", "El tipo de dato no es entero ni decimal para la funcion round", linea, columna);
     }
     
-    
+    @Override
+    public String generarast(Arbol arbol, String anterior) {
+        return "";
+    }
     
 }

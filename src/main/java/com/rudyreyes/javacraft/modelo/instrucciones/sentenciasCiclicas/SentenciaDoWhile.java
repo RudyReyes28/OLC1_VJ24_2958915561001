@@ -96,6 +96,9 @@ public class SentenciaDoWhile extends Instruccion{
         return null;
     }
     
-    
+    @Override
+    public String generarast(Arbol arbol, String anterior) {
+        return "";
+    }
     
 }

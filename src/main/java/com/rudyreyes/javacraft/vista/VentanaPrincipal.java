@@ -314,15 +314,15 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                             if (res instanceof Errores ) {
                                 lista.add((Errores)res);
                             }
-                        }
-                        
-                        if(a instanceof VectorUnaDimension){
+                        }else if(a instanceof VectorUnaDimension || a instanceof VectorDosDimensiones){
                             var res = a.interpretar(ast, tabla);
                             
                             if (res instanceof  Errores) {
                                 lista.add((Errores)res);
                             }
                         }
+                        
+                        
 
                     }
               

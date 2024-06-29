@@ -25,6 +25,7 @@ public class Arbol {
     public List<TablaSimbolos> tablasEntornos;
     private LinkedList<Instruccion> funciones;
     private LinkedList<Instruccion> structs;
+    public int contador;
 
     public Arbol(LinkedList<Instruccion> instrucciones) {
         this.instrucciones = instrucciones;
@@ -190,5 +191,11 @@ public class Arbol {
         }
         
         return null;
+    }
+    
+    public int getContador() {
+        this.contador++;
+        return this.contador;
+
     }
 }

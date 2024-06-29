@@ -102,6 +102,9 @@ public class LlamadaMetodo extends Instruccion{
 
     }
     
-    
+    @Override
+    public String generarast(Arbol arbol, String anterior) {
+        return "";
+    }
     
 }

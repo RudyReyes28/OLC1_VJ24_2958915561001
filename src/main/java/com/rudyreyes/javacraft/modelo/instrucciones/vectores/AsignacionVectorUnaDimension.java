@@ -100,7 +100,10 @@ public class AsignacionVectorUnaDimension extends Instruccion{
     }
     
     
-    
+    @Override
+    public String generarast(Arbol arbol, String anterior) {
+        return "";
+    }
     
     
 }
