@@ -31,6 +31,9 @@ public class Metodo extends Instruccion{
     @Override
     public Object interpretar(Arbol arbol, TablaSimbolos tabla) {
         for (var i : this.instrucciones) {
+            if(i ==null ){
+                continue;
+            }
             if(i instanceof FuncionReturn){
                 
                 var res = i.interpretar(arbol, tabla);

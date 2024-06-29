@@ -13,6 +13,7 @@ import com.rudyreyes.javacraft.modelo.simbolo.Tipo;
 import com.rudyreyes.javacraft.modelo.simbolo.TipoDato;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  *
@@ -76,6 +77,24 @@ public class InstanciaStruct extends Instruccion{
 
                     nuevoHash.get(i).put("valor", resultado);
 
+                }else{
+                    var resultado = valor.interpretar(arbol, tabla);
+                    if (resultado instanceof Errores) {
+                        return resultado;
+                    }
+                    
+                    if(resultado instanceof List){
+                        LinkedList<HashMap> hashAnidado = new LinkedList<>();
+                        for (HashMap mapR :(LinkedList<HashMap>) resultado) {
+                            hashAnidado.add(new HashMap(mapR));
+                        }
+                        
+                        nuevoHash.get(i).put("valor", hashAnidado);
+                    }else{
+                        return new Errores("SEMANTICO", "La variable no es un struct",
+                                this.linea, this.columna);
+                    }
+                    
                 }
                 
             }

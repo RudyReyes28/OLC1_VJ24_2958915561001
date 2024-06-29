@@ -95,7 +95,7 @@ nonterminal LinkedList<HashMap> parametros_metodo, lista_struct;
 nonterminal Instruccion instruccion_start;
 nonterminal LinkedList<Instruccion> parametros_llamada, parametros_struct;
 nonterminal Instruccion llamada_metodo, llamada_funcion, funcion_return, instancia_struct;
-nonterminal Instruccion acceso_struct;
+nonterminal Instruccion acceso_struct, asignacion_struct;
 nonterminal Object tipo_struct;
 
 precedence left OR;
@@ -138,6 +138,7 @@ instruccion ::= println:a                   {: RESULT= a; :}
              | llamada_metodo:a             {: RESULT= a; :}
              | declaracion_struct:a         {: RESULT= a; :}
              | instancia_struct:a           {: RESULT= a; :}
+             | asignacion_struct:a          {: RESULT= a; :}
              | funcion_return:a             {: RESULT= a; :}
              | error FINCADENA
              | error 
@@ -302,6 +303,10 @@ parametros_struct ::= parametros_struct:a COMA ID:b DOSPUNTOS expresion:c {:  RE
 
 ;
 
+asignacion_struct ::= ID:a PUNTO ID:b IGUAL expresion:c FINCADENA {: RESULT = new AsignacionBasicaStruct(a,b,c, aleft, aright); :}
+                    | ID:a PUNTO ID:b PUNTO ID:c IGUAL expresion:d FINCADENA {: RESULT = new AsignacionStructAnidado(a,b,c, d, aleft, aright); :}
+;
+
 instruccion_start ::=  STARTWITH ID:a PAR1 parametros_llamada:b PAR2 FINCADENA     {:   RESULT = new StartWith(a, b, aleft, aright );   :}
             | STARTWITH ID:a PAR1 PAR2 FINCADENA                  {:   RESULT = new StartWith(a, new LinkedList<Instruccion>(), aleft, aright );   :}
 
@@ -399,5 +404,5 @@ castearExpresion ::= PAR1 INT PAR2 expresion:a      {:   RESULT = new Casteo(a, 
 ;
 
 acceso_struct ::= ID:a PUNTO ID:b {: RESULT = new AccesoStructBasico(a, b, aleft, aright);   :}
-
+                | ID:a PUNTO ID:b PUNTO ID:c {: RESULT = new AccesoStructAnidado(a, b, c, aleft, aright);   :}
 ;
