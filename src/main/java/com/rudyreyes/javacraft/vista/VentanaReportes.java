@@ -13,6 +13,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -210,7 +211,7 @@ public class VentanaReportes extends javax.swing.JDialog {
                         "Variable",
                         simbolo.getTipo().getTipo(),
                         entornoSimbolos.getNombreEntorno(),
-                        simbolo.getValor(),
+                        this.obtenerValor(simbolo.getValor()),
                         simbolo.getLinea(),
                         simbolo.getColumna()
                     });
@@ -222,6 +223,48 @@ public class VentanaReportes extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_btnTablaSimbolosActionPerformed
 
+    private String obtenerValor(Object valor){
+        if(valor instanceof Object[]){
+            Object [] resultado = (Object []) valor;
+            String vector = "[";
+            for(int i=0; i<resultado.length; i++){
+                vector += resultado[(int)i] + ", ";
+            }
+            return vector+= "]"; 
+        
+        }else if(valor instanceof List){
+            LinkedList<HashMap> acceso = (LinkedList<HashMap>) valor;
+            String struct = "{";
+            
+            for(int i =0; i< acceso.size(); i++){
+                String nombreC =(String) acceso.get(i).get("id");
+                    var valorC =  acceso.get(i).get("valor");
+                    
+                    if(valorC instanceof List){
+                        struct += nombreC +": {";
+                        LinkedList<HashMap> acceso2 = (LinkedList<HashMap>) valorC;
+
+                        for (int j = 0; j < acceso2.size(); j++) {
+                                String nombreC2 = (String) acceso2.get(j).get("id");
+                                var valorC2 = acceso2.get(j).get("valor");
+                                struct += nombreC2 + ":"+valorC2 +",";
+                        }
+                        struct += " }";
+                        
+                    }else{
+                        struct += nombreC + ":"+valorC +",";
+                    }
+                
+                    
+            }
+            return struct += "}";
+        
+        }
+        
+        return valor.toString();
+    }
+    
+    
     private void btnGenerarASTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarASTActionPerformed
         // TODO add your handling code here:
         String dotFilePath = "ast.dot";

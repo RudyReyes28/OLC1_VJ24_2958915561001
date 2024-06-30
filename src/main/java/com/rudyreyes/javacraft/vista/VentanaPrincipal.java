@@ -14,6 +14,7 @@ import com.rudyreyes.javacraft.modelo.instrucciones.listas.DeclaracionLista;
 import com.rudyreyes.javacraft.modelo.instrucciones.metodos.Metodo;
 import com.rudyreyes.javacraft.modelo.instrucciones.metodos.StartWith;
 import com.rudyreyes.javacraft.modelo.instrucciones.structs.DeclaracionStruct;
+import com.rudyreyes.javacraft.modelo.instrucciones.vectores.AsignacionVectorDosDimensiones;
 import com.rudyreyes.javacraft.modelo.instrucciones.vectores.AsignacionVectorUnaDimension;
 import com.rudyreyes.javacraft.modelo.instrucciones.vectores.VectorDosDimensiones;
 import com.rudyreyes.javacraft.modelo.instrucciones.vectores.VectorUnaDimension;
@@ -308,7 +309,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                             continue;
                         }
 
-                        if (a instanceof DeclaracionVariable ) {
+                        if (a instanceof DeclaracionVariable || a instanceof AsignacionVariable) {
                             
                             var res = a.interpretar(ast, tabla);
                             
@@ -316,6 +317,18 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                                 lista.add((Errores)res);
                             }
                         }else if(a instanceof VectorUnaDimension || a instanceof VectorDosDimensiones){
+                            var res = a.interpretar(ast, tabla);
+                            
+                            if (res instanceof  Errores) {
+                                lista.add((Errores)res);
+                            }
+                        }else if(a instanceof DeclaracionLista){
+                            var res = a.interpretar(ast, tabla);
+                            
+                            if (res instanceof  Errores) {
+                                lista.add((Errores)res);
+                            }
+                        }else if(a instanceof AsignacionVectorUnaDimension || a instanceof AsignacionVectorDosDimensiones){
                             var res = a.interpretar(ast, tabla);
                             
                             if (res instanceof  Errores) {
@@ -402,23 +415,43 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             cadena += "nINSTRUCCIONES[label=\"INSTRUCCIONES\"];\n";
             cadena += "nINICIO -> nINSTRUCCIONES;\n";
 
-            for (var i : ast.getInstrucciones()) {
-                if (i == null) {
-                    continue;
-                }
-                
-                if (i instanceof StartWith) {
-                    String nodoAux = "n" + ast.getContador();
-                    cadena += nodoAux + "[label=\"INSTRUCCION\"];\n";
-                    cadena += "nINSTRUCCIONES -> " + nodoAux + ";\n";
-                    cadena += i.generarast(ast, nodoAux);
-                }
-                
-                
+        for (var i : ast.getInstrucciones()) {
+            if (i == null) {
+                continue;
+            }
+            if (i instanceof DeclaracionVariable || i instanceof AsignacionVariable) {
+                String nodoAux = "n" + ast.getContador();
+                cadena += nodoAux + "[label=\"INSTRUCCION\"];\n";
+                cadena += "nINSTRUCCIONES -> " + nodoAux + ";\n";
+                cadena += i.generarast(ast, nodoAux);
+            } else if (i instanceof VectorUnaDimension || i instanceof VectorDosDimensiones) {
+                String nodoAux = "n" + ast.getContador();
+                cadena += nodoAux + "[label=\"INSTRUCCION\"];\n";
+                cadena += "nINSTRUCCIONES -> " + nodoAux + ";\n";
+                cadena += i.generarast(ast, nodoAux);
+            } else if (i instanceof DeclaracionLista) {
+                String nodoAux = "n" + ast.getContador();
+                cadena += nodoAux + "[label=\"INSTRUCCION\"];\n";
+                cadena += "nINSTRUCCIONES -> " + nodoAux + ";\n";
+                cadena += i.generarast(ast, nodoAux);
+            } else if (i instanceof AsignacionVectorUnaDimension || i instanceof AsignacionVectorDosDimensiones) {
+                String nodoAux = "n" + ast.getContador();
+                cadena += nodoAux + "[label=\"INSTRUCCION\"];\n";
+                cadena += "nINSTRUCCIONES -> " + nodoAux + ";\n";
+                cadena += i.generarast(ast, nodoAux);
             }
 
-            cadena += "\n}";
-            //System.out.println(cadena);
+            if (i instanceof StartWith) {
+                String nodoAux = "n" + ast.getContador();
+                cadena += nodoAux + "[label=\"INSTRUCCION\"];\n";
+                cadena += "nINSTRUCCIONES -> " + nodoAux + ";\n";
+                cadena += i.generarast(ast, nodoAux);
+            }
+
+        }
+
+        cadena += "\n}";
+        //System.out.println(cadena);
             instAST =  cadena;
     }
     

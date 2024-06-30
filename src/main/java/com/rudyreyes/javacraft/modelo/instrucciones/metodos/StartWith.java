@@ -40,7 +40,7 @@ public class StartWith extends Instruccion{
             var newTabla = new TablaSimbolos(arbol.getTablaGlobal());
             newTabla.setNombre("Start_with");
 
-            
+            arbol.agregarTablaEntorno(newTabla);
             if (metodo.parametros.size() != this.parametros.size()) {
                 return new Errores("SEMANTICO", "Los parametros de la funcion '"+id+"' son erroneos",
                         this.linea, this.columna);

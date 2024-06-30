@@ -96,7 +96,7 @@ public class FuncionToString extends  Instruccion{
             Object [] resultado = (Object []) valor;
             
             for(int i=0; i<resultado.length; i++){
-                vector += (String)resultado[(int)i] + ", ";
+                vector += resultado[(int)i] + ", ";
             }
         }
         vector+= "]"; 

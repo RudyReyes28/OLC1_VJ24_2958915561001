@@ -39,6 +39,7 @@ public class LlamadaMetodo extends Instruccion{
             
             var newTabla = new TablaSimbolos(arbol.getTablaGlobal());
             newTabla.setNombre("LLAMADA METODO " + this.id);
+            arbol.agregarTablaEntorno(newTabla);
             if (metodo.parametros.size() != this.parametros.size()) {
                 return new Errores("SEMANTICO", "Parametros Erroneos",
                         this.linea, this.columna);
