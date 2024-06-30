@@ -7,6 +7,7 @@ package com.rudyreyes.javacraft.vista;
 import com.rudyreyes.javacraft.modelo.errores.Errores;
 import com.rudyreyes.javacraft.modelo.simbolo.EntornoSimbolos;
 import com.rudyreyes.javacraft.modelo.simbolo.Simbolo;
+import com.rudyreyes.javacraft.modelo.simbolo.TipoDato;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.FileWriter;
@@ -211,7 +212,7 @@ public class VentanaReportes extends javax.swing.JDialog {
                         "Variable",
                         simbolo.getTipo().getTipo(),
                         entornoSimbolos.getNombreEntorno(),
-                        this.obtenerValor(simbolo.getValor()),
+                        this.obtenerValor(simbolo.getValor(),simbolo.getTipo().getTipo()),
                         simbolo.getLinea(),
                         simbolo.getColumna()
                     });
@@ -223,7 +224,7 @@ public class VentanaReportes extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_btnTablaSimbolosActionPerformed
 
-    private String obtenerValor(Object valor){
+    private String obtenerValor(Object valor, TipoDato tipo){
         if(valor instanceof Object[]){
             Object [] resultado = (Object []) valor;
             String vector = "[";
@@ -232,7 +233,7 @@ public class VentanaReportes extends javax.swing.JDialog {
             }
             return vector+= "]"; 
         
-        }else if(valor instanceof List){
+        }else if(valor instanceof List && tipo==TipoDato.VOID){
             LinkedList<HashMap> acceso = (LinkedList<HashMap>) valor;
             String struct = "{";
             
@@ -267,18 +268,23 @@ public class VentanaReportes extends javax.swing.JDialog {
     
     private void btnGenerarASTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarASTActionPerformed
         // TODO add your handling code here:
-        String dotFilePath = "ast.dot";
-        String outputFormat = "ast.png";
-        generarArchivoDOT(dotFilePath);
-        generarImagenAST(dotFilePath, outputFormat);
-        try {
-            String imagePath;
-            File imageFile = new File(outputFormat);
-            Desktop desktop = Desktop.getDesktop();
-            desktop.open(imageFile);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (insAST != null) {
+            String dotFilePath = "ast.dot";
+            String outputFormat = "ast.png";
+            generarArchivoDOT(dotFilePath);
+            generarImagenAST(dotFilePath, outputFormat);
+            try {
+                String imagePath;
+                File imageFile = new File(outputFormat);
+                Desktop desktop = Desktop.getDesktop();
+                desktop.open(imageFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, "No se pudo generar el ast");
         }
+        
     }//GEN-LAST:event_btnGenerarASTActionPerformed
 
     public  void generarArchivoDOT(String dotFilePath) {

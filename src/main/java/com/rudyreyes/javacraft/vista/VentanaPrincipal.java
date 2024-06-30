@@ -357,7 +357,13 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                         if (resultadoExecute instanceof Errores) {
                             lista.add((Errores) resultadoExecute);
                         }else{
-                            generarAst(ast);
+                            try{
+                                //generarAst(ast);
+                            
+                            }catch(Exception e){
+                                this.instAST = null;
+                            }
+                            this.instAST = null;
                         }
                     }else{
                         lista.add(new Errores("SEMANTICO", "No se encontro la funcion startwith", 0, 0));
@@ -409,8 +415,10 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEjecutarActionPerformed
 
     private void generarAst(Arbol ast){
+        String cadena = "digraph ast{\n";
+        try{
         //generar AST
-            String cadena = "digraph ast{\n";
+            
             cadena += "nINICIO[label=\"INICIO\"];\n";
             cadena += "nINSTRUCCIONES[label=\"INSTRUCCIONES\"];\n";
             cadena += "nINICIO -> nINSTRUCCIONES;\n";
@@ -449,10 +457,14 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             }
 
         }
-
         cadena += "\n}";
         //System.out.println(cadena);
             instAST =  cadena;
+        }catch(Exception e){
+            instAST = null;
+        }
+
+        
     }
     
     private void btnPestaniaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPestaniaActionPerformed
