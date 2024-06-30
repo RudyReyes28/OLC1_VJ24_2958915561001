@@ -111,7 +111,46 @@ public class AsignacionVectorDosDimensiones extends Instruccion{
     
     @Override
     public String generarast(Arbol arbol, String anterior) {
-        return "";
+        String stAsig = "n" + arbol.getContador();
+        String idV = "n" + arbol.getContador();
+        String cr1 = "n" + arbol.getContador();
+        String pos = "n" + arbol.getContador();
+        String cr2 = "n" + arbol.getContador();
+        String cr3 = "n" + arbol.getContador();
+        String pos2 = "n" + arbol.getContador();
+        String cr4 = "n" + arbol.getContador();
+        String igualN = "n" + arbol.getContador();
+        String asig = "n" + arbol.getContador();
+        String pC = "n" + arbol.getContador();
+        
+        String resultado = anterior+" ->"+stAsig+";\n"; 
+        
+        resultado += stAsig + "[label=\"ASIGNACION VECTOR\"];\n";
+        resultado += idV + "[label=\""+this.id+"\"];\n";
+        resultado += cr1 + "[label=\"[\"];\n";
+        resultado += pos + "[label=\"POS\"];\n";
+        resultado += cr2 + "[label=\"]\"];\n";
+        resultado += cr3 + "[label=\"[\"];\n";
+        resultado += pos2 + "[label=\"POS\"];\n";
+        resultado += cr4 + "[label=\"]\"];\n";
+        resultado += igualN + "[label=\"=\"];\n";
+        resultado += asig + "[label=\"EXP\"];\n";
+        resultado += pC + "[label=\";\"];\n";
+        
+        resultado += stAsig + " ->" + idV + ";\n";
+        resultado += stAsig + " ->" + igualN + ";\n";
+        resultado += stAsig + " ->" + cr1 + ";\n";
+        resultado += stAsig + " ->" + pos + ";\n";
+        resultado += stAsig + " ->" + cr2 + ";\n";
+        resultado += stAsig + " ->" + cr3 + ";\n";
+        resultado += stAsig + " ->" + pos2 + ";\n";
+        resultado += stAsig + " ->" + cr4 + ";\n";
+        resultado += stAsig + " ->" + asig + ";\n";
+        resultado += stAsig + " ->" + pC + ";\n";
+        resultado +=this.posicion1.generarast(arbol, pos);
+        resultado +=this.posicion2.generarast(arbol, pos2);
+        
+        return resultado += this.asignacion.generarast(arbol, asig);
     }
     
 

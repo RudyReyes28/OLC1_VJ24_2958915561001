@@ -50,6 +50,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class VentanaPrincipal extends javax.swing.JFrame {
         private LinkedList<Errores> lista ;
         private List<EntornoSimbolos> listaSimbolos;
+        private String instAST;
     /**
      * Creates new form VentanaPrincipal
      */
@@ -337,12 +338,20 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                             break;
                         }
                     }
+                    if (inicio != null) {
+                        var resultadoExecute = inicio.interpretar(ast, tabla);
 
-                    var resultadoExecute = inicio.interpretar(ast, tabla);
-                    
-                    if (resultadoExecute instanceof Errores) {
-                        lista.add((Errores)resultadoExecute);
+                        if (resultadoExecute instanceof Errores) {
+                            lista.add((Errores) resultadoExecute);
+                        }else{
+                            generarAst(ast);
+                        }
+                    }else{
+                        lista.add(new Errores("SEMANTICO", "No se encontro la funcion startwith", 0, 0));
                     }
+                            
+
+                    
                     
 
 /*
@@ -386,6 +395,33 @@ public class VentanaPrincipal extends javax.swing.JFrame {
          
     }//GEN-LAST:event_btnEjecutarActionPerformed
 
+    private void generarAst(Arbol ast){
+        //generar AST
+            String cadena = "digraph ast{\n";
+            cadena += "nINICIO[label=\"INICIO\"];\n";
+            cadena += "nINSTRUCCIONES[label=\"INSTRUCCIONES\"];\n";
+            cadena += "nINICIO -> nINSTRUCCIONES;\n";
+
+            for (var i : ast.getInstrucciones()) {
+                if (i == null) {
+                    continue;
+                }
+                
+                if (i instanceof StartWith) {
+                    String nodoAux = "n" + ast.getContador();
+                    cadena += nodoAux + "[label=\"INSTRUCCION\"];\n";
+                    cadena += "nINSTRUCCIONES -> " + nodoAux + ";\n";
+                    cadena += i.generarast(ast, nodoAux);
+                }
+                
+                
+            }
+
+            cadena += "\n}";
+            //System.out.println(cadena);
+            instAST =  cadena;
+    }
+    
     private void btnPestaniaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPestaniaActionPerformed
         // TODO add your handling code here:
          String nombrePestania = JOptionPane.showInputDialog(this, "Ingrese el nombre de la nueva pestaña:");
@@ -408,7 +444,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
     private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
         // TODO add your handling code here:
-        VentanaReportes ventanaR = new VentanaReportes(this, true, lista, listaSimbolos);
+        VentanaReportes ventanaR = new VentanaReportes(this, true, lista, listaSimbolos, instAST);
         ventanaR.setVisible(true);
     }//GEN-LAST:event_btnReportesActionPerformed
 

@@ -67,7 +67,34 @@ public class RemoveLista extends Instruccion{
     
     @Override
     public String generarast(Arbol arbol, String anterior) {
-        return "";
+        //<ID>.remove( <EXPRESION>)
+
+        String stAsig = "n" + arbol.getContador();
+        String idV = "n" + arbol.getContador();
+        String punto = "n" + arbol.getContador();
+        String cN = "n" + arbol.getContador();
+        String par1 = "n" + arbol.getContador();
+        String exp = "n" + arbol.getContador();
+        String par2 = "n" + arbol.getContador();
+        
+        String resultado = anterior+" ->"+stAsig+";\n"; 
+        
+        resultado += stAsig + "[label=\"REMOVE\"];\n";
+        resultado += idV + "[label=\""+this.id+"\"];\n";
+        resultado += punto + "[label=\".\"];\n";
+        resultado += cN + "[label=\"remove\"];\n";
+        resultado += par1 + "[label=\"(\"];\n";
+        resultado += exp + "[label=\"POS\"];\n";
+        resultado += par2 + "[label=\")\"];\n";
+        
+        resultado += stAsig + " ->" + idV + ";\n";
+        resultado += stAsig + " ->" + punto + ";\n";
+        resultado += stAsig + " ->" + cN + ";\n";
+        resultado += stAsig + " ->" + par1 + ";\n";
+        resultado += stAsig + " ->" + exp + ";\n";
+        resultado += stAsig + " ->" + par2 + ";\n";
+        
+        return resultado += this.posicion.generarast(arbol, exp);
     }
     
     

@@ -55,7 +55,26 @@ public class FuncionLength extends Instruccion{
     
     @Override
     public String generarast(Arbol arbol, String anterior) {
-        return "";
+        String stAsig = "n" + arbol.getContador();
+        String cN = "n" + arbol.getContador();
+        String par1 = "n" + arbol.getContador();
+        String exp = "n" + arbol.getContador();
+        String par2 = "n" + arbol.getContador();
+        
+        String resultado = anterior+" ->"+stAsig+";\n"; 
+        
+        resultado += stAsig + "[label=\"FUNCION LENGTH\"];\n";
+        resultado += cN + "[label=\"length\"];\n";
+        resultado += par1 + "[label=\"(\"];\n";
+        resultado += exp + "[label=\"EXP\"];\n";
+        resultado += par2 + "[label=\")\"];\n";
+        
+        resultado += stAsig + " ->" + cN + ";\n";
+        resultado += stAsig + " ->" + par1 + ";\n";
+        resultado += stAsig + " ->" + exp + ";\n";
+        resultado += stAsig + " ->" + par2 + ";\n";
+        
+        return resultado += this.expresion.generarast(arbol, exp);
     }
 
 }

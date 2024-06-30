@@ -82,7 +82,38 @@ public class DeclaracionVariable extends Instruccion{
     
     @Override
     public String generarast(Arbol arbol, String anterior) {
-        return "";
+        //<MUTABILIDAD> <ID> : <TIPO> ;
+        String declaracion = "n" + arbol.getContador();
+        String mut = "n" + arbol.getContador();
+        String idN = "n" + arbol.getContador();
+        String dosP = "n" + arbol.getContador();
+        String tipoN= "n" + arbol.getContador();
+        String igual= "n" + arbol.getContador();
+        String expN = "n" + arbol.getContador();
+        String fin = "n" + arbol.getContador();
+        
+        String resultado = anterior+" ->"+declaracion+";\n";
+        
+        resultado += declaracion + "[label=\"Declaracion Variable\"];\n";
+        resultado += mut + "[label=\""+ ((this.mutabilidad)? "var":"const") +"\"];\n";
+        resultado += idN + "[label=\""+this.identificador+"\"];\n";
+        resultado += dosP + "[label=\":\"];\n";
+        resultado += tipoN + "[label=\""+this.tipo.getTipo().toString()+"\"];\n";
+        resultado += igual + "[label=\"=\"];\n";
+        resultado += expN + "[label=\"EXPRESION\"];\n";
+        resultado += fin + "[label=\";\"];\n";
+        
+        resultado += declaracion + " ->" + mut + ";\n";
+        resultado += declaracion + " ->" + idN + ";\n";
+        resultado += declaracion + " ->" + dosP + ";\n";
+        resultado += declaracion + " ->" + tipoN + ";\n";
+        resultado += declaracion + " ->" + igual + ";\n";
+        resultado += declaracion + " ->" + expN + ";\n";
+        resultado += declaracion + " ->" + fin + ";\n";
+        
+        
+        return resultado += this.valor.generarast(arbol, expN);
+        
     }
     
 }

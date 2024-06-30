@@ -66,6 +66,26 @@ public class AsignacionVariable extends Instruccion{
     
     @Override
     public String generarast(Arbol arbol, String anterior) {
-        return "";
+        //num = 10;
+        String stAsig = "n" + arbol.getContador();
+        String idV = "n" + arbol.getContador();
+        String igualN = "n" + arbol.getContador();
+        String asig = "n" + arbol.getContador();
+        String pC = "n" + arbol.getContador();
+        
+        String resultado = anterior+" ->"+stAsig+";\n"; 
+        
+        resultado += stAsig + "[label=\"ASIGNACION VAR\"];\n";
+        resultado += idV + "[label=\""+this.id+"\"];\n";
+        resultado += igualN + "[label=\"=\"];\n";
+        resultado += asig + "[label=\"EXP\"];\n";
+        resultado += pC + "[label=\";\"];\n";
+        
+        resultado += stAsig + " ->" + idV + ";\n";
+        resultado += stAsig + " ->" + igualN + ";\n";
+        resultado += stAsig + " ->" + asig + ";\n";
+        resultado += stAsig + " ->" + pC + ";\n";
+        
+        return resultado += this.exp.generarast(arbol, asig);
     }
 }

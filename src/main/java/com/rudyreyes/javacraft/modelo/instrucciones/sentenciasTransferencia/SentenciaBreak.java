@@ -27,7 +27,18 @@ public class SentenciaBreak extends Instruccion {
     
     @Override
     public String generarast(Arbol arbol, String anterior) {
-        return "";
+        
+        String bre = "n" + arbol.getContador();
+        String dosP = "n" + arbol.getContador();
+        
+        String resultado = anterior+" ->"+bre+";\n"; 
+         resultado += anterior+" ->"+dosP+";\n"; 
+        
+        resultado += bre + "[label=\"break\"];\n";
+        resultado += dosP + "[label=\";\"];\n";
+        
+        return resultado;
+        
     }
     
 }

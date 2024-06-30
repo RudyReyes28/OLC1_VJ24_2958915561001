@@ -7,10 +7,15 @@ package com.rudyreyes.javacraft.vista;
 import com.rudyreyes.javacraft.modelo.errores.Errores;
 import com.rudyreyes.javacraft.modelo.simbolo.EntornoSimbolos;
 import com.rudyreyes.javacraft.modelo.simbolo.Simbolo;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
@@ -23,13 +28,15 @@ public class VentanaReportes extends javax.swing.JDialog {
 
     LinkedList<Errores> listaErrores;
     List<EntornoSimbolos> listaSimbolos;
+    String insAST;
     /**
      * Creates new form VentanaReportes
      */
-    public VentanaReportes(java.awt.Frame parent, boolean modal, LinkedList<Errores> lista, List<EntornoSimbolos> listaSimbolos) {
+    public VentanaReportes(java.awt.Frame parent, boolean modal, LinkedList<Errores> lista, List<EntornoSimbolos> listaSimbolos, String ast) {
         super(parent, modal);
         this.listaErrores = lista;
         this.listaSimbolos = listaSimbolos;
+        this.insAST = ast;
         initComponents();
         
         this.setLocationRelativeTo(null);
@@ -79,6 +86,11 @@ public class VentanaReportes extends javax.swing.JDialog {
 
         btnGenerarAST.setFont(new java.awt.Font("Comic Sans MS", 1, 14)); // NOI18N
         btnGenerarAST.setText("Generar AST");
+        btnGenerarAST.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGenerarASTActionPerformed(evt);
+            }
+        });
 
         scrollTablaReportes.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -210,6 +222,46 @@ public class VentanaReportes extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_btnTablaSimbolosActionPerformed
 
+    private void btnGenerarASTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarASTActionPerformed
+        // TODO add your handling code here:
+        String dotFilePath = "ast.dot";
+        String outputFormat = "ast.png";
+        generarArchivoDOT(dotFilePath);
+        generarImagenAST(dotFilePath, outputFormat);
+        try {
+            String imagePath;
+            File imageFile = new File(outputFormat);
+            Desktop desktop = Desktop.getDesktop();
+            desktop.open(imageFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btnGenerarASTActionPerformed
+
+    public  void generarArchivoDOT(String dotFilePath) {
+        try (FileWriter writer = new FileWriter(dotFilePath)) {
+            writer.write(insAST);
+            writer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static void generarImagenAST(String dotFilePath, String nombreImagen) {
+        String command = "dot -T png -Gratio=fill -o " + nombreImagen + " " + dotFilePath;
+        try {
+            Process process = Runtime.getRuntime().exec(command);
+            int exitCode = process.waitFor();
+            if (exitCode == 0) {
+                JOptionPane.showMessageDialog(null, "Imagen generada");
+            } else {
+                JOptionPane.showMessageDialog(null, "Error al generar la imagen");
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+    
     public String convertirValorAString(Object valor) {
         if (valor == null) {
             return "null";

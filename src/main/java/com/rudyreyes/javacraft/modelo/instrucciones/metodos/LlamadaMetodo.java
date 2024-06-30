@@ -104,7 +104,26 @@ public class LlamadaMetodo extends Instruccion{
     
     @Override
     public String generarast(Arbol arbol, String anterior) {
-        return "";
+        var busqueda = arbol.getFuncion(id);
+        var metodo = (Metodo)busqueda;
+        String nodoExp1 = "n" + arbol.getContador();
+        String nodoOp = "n" + arbol.getContador();
+        String nodoExp2 = "n" + arbol.getContador();
+        String inst = "n" + arbol.getContador();
+        
+        String resultado = anterior + " -> " + nodoExp1 + ";\n";
+        
+        
+        resultado += nodoExp1 + "[label=\"LLAMADA METODO\"];\n";
+        resultado += nodoOp + "[label=\"Metodo\"];\n";
+        resultado += nodoExp2 + "[label=\""+ this.id+" \"];\n";
+        resultado += inst + "[label=\" INSTRUCCIONES \"];\n";
+        
+        resultado += nodoExp1 +"->"+ nodoOp+ ";\n";
+        resultado += nodoOp +"->"+ nodoExp2+ ";\n";
+        resultado += nodoExp2 +"->"+ inst+ ";\n";
+   
+        return resultado+= metodo.generarast(arbol, inst);
     }
     
 }

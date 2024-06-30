@@ -98,6 +98,50 @@ public class SentenciaWhile extends Instruccion{
     
     @Override
     public String generarast(Arbol arbol, String anterior) {
-        return "";
+        /*while ( <EXPRESION> ) {
+<INSTRUCCIONES>
+}
+*/      String stWhile = "n" + arbol.getContador();
+        String whileN = "n" + arbol.getContador();
+        String par1 = "n" + arbol.getContador();
+        String asig = "n" + arbol.getContador();
+        String par2 = "n" + arbol.getContador();
+        String llave1 = "n" + arbol.getContador();
+        String inst = "n" + arbol.getContador();
+        String llave2 = "n" + arbol.getContador();
+        
+        String resultado = anterior+" ->"+stWhile+";\n"; 
+        
+        resultado += stWhile + "[label=\"CICLO WHILE\"];\n";
+        resultado += whileN + "[label=\"while\"];\n";
+        resultado += par1 + "[label=\"(\"];\n";
+        resultado += asig + "[label=\"COND\"];\n";
+        resultado += par2 + "[label=\")\"];\n";
+        resultado += llave1 + "[label=\"{\"];\n";
+        resultado += inst + "[label=\"INSTRUCCIONES\"];\n";
+        resultado += llave2 + "[label=\"}\"];\n";
+        
+        resultado += stWhile + " ->" + whileN + ";\n";
+        resultado += stWhile + " ->" + par1 + ";\n";
+        resultado += stWhile + " ->" + asig + ";\n";
+        resultado += stWhile + " ->" + par2 + ";\n";
+        resultado += stWhile + " ->" + llave1 + ";\n";
+        resultado += stWhile + " ->" + inst + ";\n";
+        resultado += stWhile + " ->" + llave2 + ";\n";
+        
+        resultado += this.condicion.generarast(arbol, asig);
+        
+        for (var i : this.instrucciones) {
+            if(i ==null ){
+                continue;
+            }
+            
+            String nodoAux = "n" + arbol.getContador();
+                resultado += nodoAux + "[label=\"INSTRUCCION\"];\n";
+                resultado += inst + "-> " + nodoAux + ";\n";
+                resultado += i.generarast(arbol, nodoAux);
+        }
+        
+        return resultado;
     }
 }

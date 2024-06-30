@@ -82,7 +82,37 @@ public class AccesoVectorDosDimensiones extends Instruccion{
 
     @Override
     public String generarast(Arbol arbol, String anterior) {
-        return "";
+        String stAsig = "n" + arbol.getContador();
+        String idV = "n" + arbol.getContador();
+        String par1 = "n" + arbol.getContador();
+        String exp = "n" + arbol.getContador();
+        String par2 = "n" + arbol.getContador();
+        String par11 = "n" + arbol.getContador();
+        String exp2 = "n" + arbol.getContador();
+        String par22 = "n" + arbol.getContador();
+        
+        String resultado = anterior+" ->"+stAsig+";\n"; 
+        
+        resultado += stAsig + "[label=\"ACCESO VECTOR\"];\n";
+        resultado += idV + "[label=\""+this.identificador+"\"];\n";
+        resultado += par1 + "[label=\"[\"];\n";
+        resultado += exp + "[label=\"POS\"];\n";
+        resultado += par2 + "[label=\"]\"];\n";
+        resultado += par11 + "[label=\"[\"];\n";
+        resultado += exp2 + "[label=\"POS\"];\n";
+        resultado += par22 + "[label=\"]\"];\n";
+        
+        resultado += stAsig + " ->" + idV + ";\n";
+        resultado += stAsig + " ->" + par1 + ";\n";
+        resultado += stAsig + " ->" + exp + ";\n";
+        resultado += stAsig + " ->" + par2 + ";\n";
+        resultado += stAsig + " ->" + par11 + ";\n";
+        resultado += stAsig + " ->" + exp2 + ";\n";
+        resultado += stAsig + " ->" + par22 + ";\n";
+        resultado += this.posicion1.generarast(arbol, exp);
+        resultado += this.posicion2.generarast(arbol, exp2);
+        
+        return resultado ;
     }
     
     

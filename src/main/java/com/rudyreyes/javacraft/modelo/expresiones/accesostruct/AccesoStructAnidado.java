@@ -71,7 +71,28 @@ public class AccesoStructAnidado extends Instruccion{
 
     @Override
     public String generarast(Arbol arbol, String anterior) {
-        return "";
+        String stAsig = "n" + arbol.getContador();
+        String idV = "n" + arbol.getContador();
+        String punto = "n" + arbol.getContador();
+        String cN = "n" + arbol.getContador();
+        String punto2 = "n" + arbol.getContador();
+        String cN2 = "n" + arbol.getContador();
+        
+        String resultado = anterior+" ->"+stAsig+";\n"; 
+        
+        resultado += stAsig + "[label=\"ACCESO STRUCT\"];\n";
+        resultado += idV + "[label=\""+this.nombreStruct+"\"];\n";
+        resultado += punto + "[label=\".\"];\n";
+        resultado += cN + "[label=\""+this.campo1+"\"];\n";
+        resultado += punto2 + "[label=\".\"];\n";
+        resultado += cN2 + "[label=\""+this.campo2+"\"];\n";
+        
+        resultado += stAsig + " ->" + idV + ";\n";
+        resultado += stAsig + " ->" + punto + ";\n";
+        resultado += stAsig + " ->" + cN + ";\n";
+        resultado += stAsig + " ->" + punto2 + ";\n";
+        resultado += stAsig + " ->" + cN2 + ";\n";
+        return resultado;
     }
     
     

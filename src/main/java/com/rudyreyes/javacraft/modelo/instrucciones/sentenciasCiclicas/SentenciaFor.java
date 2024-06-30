@@ -113,6 +113,65 @@ public class SentenciaFor extends Instruccion{
     
     @Override
     public String generarast(Arbol arbol, String anterior) {
-        return "";
+        /*for ( <ASIGNACIÓN> ; <CONDICIÓN> ; <ACTUALIZACIÓN> ) {
+<INSTRUCCIONES>
+}
+*/
+        String stFor = "n" + arbol.getContador();
+        String forN = "n" + arbol.getContador();
+        String par1 = "n" + arbol.getContador();
+        String asig = "n" + arbol.getContador();
+        String pc1 = "n" + arbol.getContador();
+        String cond = "n" + arbol.getContador();
+        String pc2 = "n" + arbol.getContador();
+        String act = "n" + arbol.getContador();
+        String par2 = "n" + arbol.getContador();
+        String llave1 = "n" + arbol.getContador();
+        String inst = "n" + arbol.getContador();
+        String llave2 = "n" + arbol.getContador();
+        
+        String resultado = anterior+" ->"+stFor+";\n"; 
+        
+        resultado += stFor + "[label=\"CICLO FOR\"];\n";
+        resultado += forN + "[label=\"for\"];\n";
+        resultado += par1 + "[label=\"(\"];\n";
+        resultado += asig + "[label=\"ASIG\"];\n";
+        resultado += pc1 + "[label=\";\"];\n";
+        resultado += cond + "[label=\"COND\"];\n";
+        resultado += pc2 + "[label=\";\"];\n";
+        resultado += act + "[label=\"ACTU\"];\n";
+        resultado += par2 + "[label=\")\"];\n";
+        resultado += llave1 + "[label=\"{\"];\n";
+        resultado += inst + "[label=\"INSTRUCCIONES\"];\n";
+        resultado += llave2 + "[label=\"}\"];\n";
+        
+        resultado += stFor + " ->" + forN + ";\n";
+        resultado += stFor + " ->" + par1 + ";\n";
+        resultado += stFor + " ->" + asig + ";\n";
+        resultado += stFor + " ->" + pc1 + ";\n";
+        resultado += stFor + " ->" + cond + ";\n";
+        resultado += stFor + " ->" + pc2 + ";\n";
+        resultado += stFor + " ->" + act + ";\n";
+        resultado += stFor + " ->" + par2 + ";\n";
+        resultado += stFor + " ->" + llave1 + ";\n";
+        resultado += stFor + " ->" + inst + ";\n";
+        resultado += stFor + " ->" + llave2 + ";\n";
+        
+        resultado += this.asignacion.generarast(arbol, asig);
+        resultado += this.condicion.generarast(arbol, cond);
+        resultado += this.actualizacion.generarast(arbol, act);
+        
+        for (var i : this.instrucciones) {
+            if(i ==null ){
+                continue;
+            }
+            
+            String nodoAux = "n" + arbol.getContador();
+                resultado += nodoAux + "[label=\"INSTRUCCION\"];\n";
+                resultado += inst + "-> " + nodoAux + ";\n";
+                resultado += i.generarast(arbol, nodoAux);
+        }
+        
+        return resultado;
     }
 }
